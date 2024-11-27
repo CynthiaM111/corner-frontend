@@ -5,7 +5,7 @@ import { io } from 'socket.io-client';
 import AddComment from './commentForm';
 import QuestionModal from '../utils/questionModal';
 
-const socket = io('http://localhost:5001');
+const socket = io(`${process.env.BASE_URL||process.env.DEV_BASE_URL}`);
 const CourseDetails = () => {
     const { courseId } = useParams(); // Get courseId from route parameters
     const [course, setCourse] = useState(null);
@@ -31,7 +31,7 @@ const CourseDetails = () => {
     useEffect(() => {
         const fetchCourseAndQuestions = async () => {
             try {
-                const response = await axios.get(`http://localhost:5001/corner/course/get-course/${courseId}`, {
+                const response = await axios.get(`${process.env.BASE_URL||process.env.DEV_BASE_URL}/corner/course/get-course/${courseId}`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 const data = await response.data;
@@ -78,7 +78,7 @@ const CourseDetails = () => {
 
         try {
             
-            const response = await axios.post('http://localhost:5001/corner/course/question/add', {
+            const response = await axios.post(`${process.env.BASE_URL||process.env.DEV_BASE_URL}/corner/course/question/add`, {
                 courseId,
                 content: questionContent,
                 title: questionTitle,

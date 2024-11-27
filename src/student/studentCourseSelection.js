@@ -36,7 +36,7 @@ const StudentCourseSelection = () => {
         setEnrolledCourses(loadEnrolledCourses());
         const fetchCourses = async () => {
             try {
-                const response = await axios.get('http://localhost:5001/corner/course/get-all-courses');
+                const response = await axios.get(`${process.env.BASE_URL||process.env.DEV_BASE_URL}/corner/course/get-all-courses`);
                 setCourses(response.data.courses);
             } catch (error) {
                 setMessage('Failed to load courses.');
@@ -49,7 +49,7 @@ const StudentCourseSelection = () => {
     const fetchUserInfo = async () => {
         try {
             const token = localStorage.getItem('studentToken');
-            const response = await axios.get('http://localhost:5001/corner/user/get-user-info', {
+            const response = await axios.get(`${process.env.BASE_URL||process.env.DEV_BASE_URL}/corner/user/get-user-info`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -86,7 +86,7 @@ const StudentCourseSelection = () => {
         try {
             const token = localStorage.getItem('studentToken');
             const response = await axios.post(
-                'http://localhost:5001/corner/course/enroll-in-courses',
+                `${process.env.BASE_URL||process.env.DEV_BASE_URL}/corner/course/enroll-in-courses`,
                 { studentId: studentId, courses: courseIds },
                 {
                     headers: {
@@ -248,18 +248,18 @@ const StudentCourseSelection = () => {
             {/* Bootstrap Navbar */}
             <nav className="navbar navbar-expand-lg navbar-dark custom-navbar mb-4">
                 <div className="container">
-                    <a className="navbar-brand" href="/select-course">Student Portal</a>
+                    <a className="navbar-brand" href="#">Student Portal</a>
                     <div className="navbar-nav">
                         <a
                             className={`nav-link ${activeTab === 'Dashboard' ? 'active' : ''}`}
-                            href="/select-course"
+                            href="#"
                             onClick={() => setActiveTab('Dashboard')}
                         >
                             Dashboard
                         </a>
                         <a
                             className={`nav-link ${activeTab === 'Courses' ? 'active' : ''}`}
-                            href="/"
+                            href="#"
                             onClick={() => setActiveTab('Courses')}
                         >
                             Courses

@@ -29,7 +29,7 @@ const TeacherDashboard = () => {
         try {
             const teacherId = getTeacherId();
             const token = localStorage.getItem('teacherToken');
-            const response = await axios.get(`http://localhost:5001/corner/course/get-courses/${teacherId}`, {
+            const response = await axios.get(`${process.env.BASE_URL||process.env.DEV_BASE_URL}/corner/course/get-courses/${teacherId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -46,7 +46,7 @@ const TeacherDashboard = () => {
 
     const fetchUserInfo = async () => {
         try {
-            const response = await axios.get('http://localhost:5001/corner/user/get-user-info', {
+            const response = await axios.get(`${process.env.BASE_URL||process.env.DEV_BASE_URL}/corner/user/get-user-info`, {
                 headers: {
                     Authorization: `Bearer ${token}`, // Replace with your token retrieval logic
                 },
@@ -68,7 +68,7 @@ const TeacherDashboard = () => {
             const teacherId = getTeacherId();
             const token = localStorage.getItem('teacherToken');
             await axios.post(
-                'http://localhost:5001/corner/course/add-course',
+                `${process.env.BASE_URL||process.env.DEV_BASE_URL}/corner/course/add-course`,
                 { name: courseName, teacherId, description: courseDescription },
                 {
                     headers: {

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+
 const AddComment = ({ questionId, onCommentAdded }) => {
     const [comment, setComment] = useState('');
     const [error, setError] = useState('');
@@ -19,7 +20,7 @@ const AddComment = ({ questionId, onCommentAdded }) => {
 
         try {
             const response = await axios.post(
-                `http://localhost:5001/corner/course/question/${questionId}/comments`,
+                `${process.env.BASE_URL||process.env.DEV_BASE_URL}/corner/course/question/${questionId}/comments`,
                 { text: comment  },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
