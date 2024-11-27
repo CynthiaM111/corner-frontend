@@ -12,10 +12,10 @@ const CourseDetails = () => {
     const [questions, setQuestions] = useState([]);
     const [questionContent, setQuestionContent] = useState('');
     const [questionTitle, setQuestionTitle] = useState('');
-    const [error, setError] = useState('');
-    const [message, setMessage] = useState('');
-    const [isStudent, setIsStudent] = useState(false);
-    const [isTeacher, setIsTeacher] = useState(false);
+    const [setError] = useState('');
+    // const [message, setMessage] = useState('');
+    const [setIsStudent] = useState(false);
+    const [setIsTeacher] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const token = localStorage.getItem('studentToken') || localStorage.getItem('teacherToken'); // Assuming token is stored in localStorage
 

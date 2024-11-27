@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import '../styles/student.css';
-import AccountModal from '../utils/accountModal';
+// import AccountModal from '../utils/accountModal';
 
 const StudentCourseSelection = () => {
     const [courses, setCourses] = useState([]);
@@ -248,18 +248,18 @@ const StudentCourseSelection = () => {
             {/* Bootstrap Navbar */}
             <nav className="navbar navbar-expand-lg navbar-dark custom-navbar mb-4">
                 <div className="container">
-                    <a className="navbar-brand" href="#">Student Portal</a>
+                    <a className="navbar-brand" href="/select-course">Student Portal</a>
                     <div className="navbar-nav">
                         <a
                             className={`nav-link ${activeTab === 'Dashboard' ? 'active' : ''}`}
-                            href="#"
+                            href="/select-course"
                             onClick={() => setActiveTab('Dashboard')}
                         >
                             Dashboard
                         </a>
                         <a
                             className={`nav-link ${activeTab === 'Courses' ? 'active' : ''}`}
-                            href="#"
+                            href="/"
                             onClick={() => setActiveTab('Courses')}
                         >
                             Courses
