@@ -24,7 +24,7 @@ const StudentDashboard = () => {
             console.log("studentId", studentId);
 
             try {
-                const response = await axios.get(`${process.env.BASE_URL||process.env.DEV_BASE_URL}/corner/course/get-courses/${studentId}`, {
+                const response = await axios.get(`${process.env.REACT_APP_BASE_URL||process.env.REACT_APP_DEV_BASE_URL}/corner/course/get-courses/${studentId}`, {
                     headers: {
                         Authorization: `Bearer ${token}`, // Include the token
                     },

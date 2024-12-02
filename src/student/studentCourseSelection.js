@@ -36,7 +36,7 @@ const StudentCourseSelection = () => {
         setEnrolledCourses(loadEnrolledCourses());
         const fetchCourses = async () => {
             try {
-                const response = await axios.get(`${process.env.BASE_URL||process.env.DEV_BASE_URL}/corner/course/get-all-courses`);
+                const response = await axios.get(`${process.env.REACT_APP_BASE_URL||process.env.REACT_APP_DEV_BASE_URL}/corner/course/get-all-courses`);
                 setCourses(response.data.courses);
             } catch (error) {
                 setMessage('Failed to load courses.');
@@ -49,7 +49,7 @@ const StudentCourseSelection = () => {
     const fetchUserInfo = async () => {
         try {
             const token = localStorage.getItem('studentToken');
-            const response = await axios.get(`${process.env.BASE_URL||process.env.DEV_BASE_URL}/corner/user/get-user-info`, {
+            const response = await axios.get(`${process.env.REACT_APP_BASE_URL||process.env.REACT_APP_DEV_BASE_URL}/corner/user/get-user-info`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -86,7 +86,7 @@ const StudentCourseSelection = () => {
         try {
             const token = localStorage.getItem('studentToken');
             const response = await axios.post(
-                `${process.env.BASE_URL||process.env.DEV_BASE_URL}/corner/course/enroll-in-courses`,
+                `${process.env.REACT_APP_BASE_URL||process.env.REACT_APP_DEV_BASE_URL}/corner/course/enroll-in-courses`,
                 { studentId: studentId, courses: courseIds },
                 {
                     headers: {

@@ -13,7 +13,7 @@ const LoginPage = () => {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post(`${process.env.BASE_URL||process.env.DEV_BASE_URL}/corner/auth/login`, { email, password });
+            const response = await axios.post(`${process.env.REACT_APP_BASE_URL||process.env.REACT_APP_DEV_BASE_URL}/corner/auth/login`, { email, password });
             const { role, token } = response.data;
 
             // Clear existing tokens

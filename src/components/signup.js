@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { signupUser } from '../services/auth';
 import { useNavigate } from 'react-router-dom';
-import '../styles/signupPage.css'; // Import the CSS file
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../styles/signupPage.css';
 
 const Signup = () => {
-    // const navigate = useNavigate();
     const [formData, setFormData] = useState({ name: '', email: '', password: '', role: '' });
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
@@ -28,54 +28,70 @@ const Signup = () => {
     };
 
     return (
-        <div className="signup-container">
-            <h2>Signup</h2>
+        <div className="container d-flex justify-content-center align-items-center vh-100">
+            <div className="card shadow p-4" style={{ maxWidth: '400px', width: '100%' }}>
+                <h2 className="text-center mb-4 text-primary">Signup</h2>
 
-            {error && <p className="error-message">{error}</p>} {/* Show error message */}
+                {error && <div className="alert alert-danger text-center">{error}</div>}
 
-            <form onSubmit={handleSubmit}>
-                <input
-                    className="input-field"
-                    type="text"
-                    name="name"
-                    placeholder="Name"
-                    value={formData.name}
-                    onChange={handleChange}
-                />
-                <input
-                    className="input-field"
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    value={formData.email}
-                    onChange={handleChange}
-                />
-                <input
-                    className="input-field"
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    value={formData.password}
-                    onChange={handleChange}
-                />
+                <form onSubmit={handleSubmit}>
+                    <div className="mb-3">
+                        <label htmlFor="name" className="form-label">Name</label>
+                        <input
+                            id="name"
+                            className="form-control"
+                            type="text"
+                            name="name"
+                            placeholder="Enter your name"
+                            value={formData.name}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="email" className="form-label">Email</label>
+                        <input
+                            id="email"
+                            className="form-control"
+                            type="email"
+                            name="email"
+                            placeholder="Enter your email"
+                            value={formData.email}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="password" className="form-label">Password</label>
+                        <input
+                            id="password"
+                            className="form-control"
+                            type="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            value={formData.password}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="role" className="form-label">Role</label>
+                        <select
+                            id="role"
+                            className="form-select"
+                            name="role"
+                            value={formData.role}
+                            onChange={handleChange}
+                        >
+                            <option value="">Select Role</option>
+                            <option value="student">Student</option>
+                            <option value="teacher">Teacher</option>
+                        </select>
+                    </div>
+                    <button className="btn btn-primary w-100" type="submit">
+                        Sign Up
+                    </button>
+                </form>
 
-                <select
-                    className="select-role"
-                    name="role"
-                    value={formData.role}
-                    onChange={handleChange}
-                >
-                    <option value="">Select Role</option>
-                    <option value="student">Student</option>
-                    <option value="teacher">Teacher</option>
-                </select>
-
-                <button className="signup-button" type="submit">
-                    Sign Up
-                </button>
-            </form>
-
-            {message && <p className="message">{message}</p>} {/* Show success message */}
+                {message && <div className="alert alert-success text-center mt-3">{message}</div>}
+            </div>
         </div>
     );
 };
