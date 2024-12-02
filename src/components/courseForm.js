@@ -24,7 +24,7 @@ const CourseForm = ({ teacherId }) => {
             return;
         }
         try {
-            const response = await axios.post(`${process.env.REACT_APP_BASE_URL||process.env.REACT_APP_DEV_BASE_URL}/corner/course/add-course`, {
+            const response = await axios.post(`${process.env.REACT_APP_BASE_URL || 'http://localhost:5001'}/corner/course/add-course`, {
                 name: courseName,
                 teacherId: teacherId,
             });

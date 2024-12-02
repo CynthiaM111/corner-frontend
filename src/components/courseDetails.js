@@ -5,8 +5,8 @@ import { io } from 'socket.io-client';
 import AddComment from './commentForm';
 import QuestionModal from '../utils/questionModal';
 
-const socket = io(`${process.env.REACT_APP_BASE_URL||process.env.REACT_APP_DEV_BASE_URL}`);
-console.log(process.env.REACT_APP_BASE_URL||process.env.REACT_APP_DEV_BASE_URL);
+const socket = io(`${process.env.REACT_APP_BASE_URL || 'http://localhost:5001'}`);
+console.log(process.env.REACT_APP_BASE_URL || 'http://localhost:5001');
 const CourseDetails = () => {
     const { courseId } = useParams(); // Get courseId from route parameters
     const [course, setCourse] = useState(null);
@@ -32,7 +32,7 @@ const CourseDetails = () => {
     useEffect(() => {
         const fetchCourseAndQuestions = async () => {
             try {
-                const response = await axios.get(`${process.env.REACT_APP_BASE_URL||process.env.REACT_APP_DEV_BASE_URL}/corner/course/get-course/${courseId}`, {
+                const response = await axios.get(`${process.env.REACT_APP_BASE_URL || 'http://localhost:5001'}/corner/course/get-course/${courseId}`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 const data = await response.data;
@@ -79,7 +79,7 @@ const CourseDetails = () => {
 
         try {
             
-            const response = await axios.post(`${process.env.REACT_APP_BASE_URL||process.env.REACT_APP_DEV_BASE_URL}/corner/course/question/add`, {
+            const response = await axios.post(`${process.env.REACT_APP_BASE_URL || 'http://localhost:5001'}/corner/course/question/add`, {
                 courseId,
                 content: questionContent,
                 title: questionTitle,

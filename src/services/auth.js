@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 
-const API_URL = `${process.env.BASE_URL||process.env.DEV_BASE_URL}/corner/auth`;
+const API_URL = `${process.env.REACT_APP_BASE_URL || 'http://localhost:5001'}/corner/auth`;
 
 // Function to register a user
 export const signupUser = async (userData) => {

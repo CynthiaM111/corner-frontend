@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import '../styles/loginPage.css'; // Import the CSS file
 
 const LoginPage = () => {
@@ -13,7 +13,7 @@ const LoginPage = () => {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post(`${process.env.REACT_APP_BASE_URL||process.env.REACT_APP_DEV_BASE_URL}/corner/auth/login`, { email, password });
+            const response = await axios.post(`${process.env.REACT_APP_BASE_URL || 'http://localhost:5001'}/corner/auth/login`, { email, password });
             const { role, token } = response.data;
 
             // Clear existing tokens
@@ -42,6 +42,7 @@ const LoginPage = () => {
     return (
         <div className="login-container">
             <h2>Login</h2>
+            <Link to="/signup">Signup</Link>
 
             {error && <p className="error-message">{error}</p>} {/* Show error message */}
 
@@ -61,6 +62,7 @@ const LoginPage = () => {
             />
 
             <button className="login-button" onClick={handleLogin}>Login</button>
+            {/* <button  onClick={() => window.location.href = '/signup'}>Signup</button> */}
 
             {message && <p className="message">{message}</p>} {/* Show success message */}
 
