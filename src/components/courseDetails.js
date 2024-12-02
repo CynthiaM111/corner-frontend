@@ -6,6 +6,7 @@ import AddComment from './commentForm';
 import QuestionModal from '../utils/questionModal';
 
 const socket = io(`${process.env.BASE_URL||process.env.DEV_BASE_URL}`);
+console.log(process.env.BASE_URL||process.env.DEV_BASE_URL);
 const CourseDetails = () => {
     const { courseId } = useParams(); // Get courseId from route parameters
     const [course, setCourse] = useState(null);
