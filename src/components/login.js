@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import '../styles/loginPage.css'; // Import the CSS file
 
+
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -68,7 +69,7 @@ const Login = () => {
 
             {role === 'teacher' && (
                 <div>
-                    <button className="dashboard-button" onClick={() => window.location.href = '/add-course'}>
+                    <button className="dashboard-button" onClick={() => navigate('/add-course')}>
                         Go to Teacher Dashboard
                     </button>
                 </div>
@@ -76,7 +77,7 @@ const Login = () => {
 
             {role === 'student' && (
                 <div>
-                    <button className="dashboard-button" onClick={() => window.location.href = '/select-course'}>
+                    <button className="dashboard-button" onClick={() => navigate('/select-course')}>
                         Go to Student Dashboard
                     </button>
                 </div>

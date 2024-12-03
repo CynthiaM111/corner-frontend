@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/signupPage.css';
 
 const Signup = () => {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({ name: '', email: '', password: '', role: '' });
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
@@ -13,14 +14,13 @@ const Signup = () => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const data = await signupUser(formData);
             setMessage("Signup successful!");
             setTimeout(() => {
-                window.location.href = '/login';
+                navigate('/login');
             }, 1000);
         } catch (error) {
             setError("Signup failed. Please try again.");
