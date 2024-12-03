@@ -43,7 +43,7 @@ function App() {
                 <LogoutButton />
             </div> */}
             <Routes>
-                <Route
+                {/* <Route
                     path="/"
                     element={
                         !role ? (
@@ -54,7 +54,7 @@ function App() {
                             <StudentCourseSelection />
                         )
                     }
-                />
+                /> */}
                 <Route exact path="/home" element={<Home />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
