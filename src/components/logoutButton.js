@@ -1,7 +1,9 @@
 // src/components/LogoutButton.js
 import React from 'react';
 import '../styles/logoutbtn.css';
+import { useNavigate } from 'react-router-dom';
 const LogoutButton = () => {
+    const navigate = useNavigate();
     // Check if the user is logged in (either student or teacher token)
     const isLoggedIn = localStorage.getItem('teacherToken') || localStorage.getItem('studentToken');
 
@@ -11,7 +13,7 @@ const LogoutButton = () => {
         localStorage.removeItem('studentToken');
 
         // Redirect to the login page
-        window.location.href = '/login';
+        navigate('/login');
     };
 
     if (!isLoggedIn) return null;  // Don't show button if not logged in

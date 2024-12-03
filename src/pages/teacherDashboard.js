@@ -1,5 +1,6 @@
 // src/pages/TeacherDashboard.js
 import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 // import Sidebar from '../components/sidebar';
 import CourseCard from '../components/courseCard';
@@ -8,6 +9,7 @@ import '../styles/teacherdash.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const TeacherDashboard = () => {
+    const navigate = useNavigate();
     const [courses, setCourses] = useState([]);
     const [courseName, setCourseName] = useState('');
     const [courseDescription, setCourseDescription] = useState('');
@@ -86,7 +88,7 @@ const TeacherDashboard = () => {
 
     const handleLogout = () => {
         localStorage.removeItem('teacherToken');
-        window.location.href = '/home';
+        navigate('/');
     };
         
         return (

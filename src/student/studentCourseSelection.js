@@ -5,6 +5,7 @@ import '../styles/student.css';
 // import AccountModal from '../utils/accountModal';
 
 const StudentCourseSelection = () => {
+    
     const [courses, setCourses] = useState([]);
     const [selectedCourses, setSelectedCourses] = useState([]);
     const [message, setMessage] = useState('');
@@ -112,7 +113,7 @@ const StudentCourseSelection = () => {
 
     const handleLogout = () => {
         localStorage.removeItem('studentToken');
-        window.location.href = '/home';
+        navigate('/home');
     };
     
 
