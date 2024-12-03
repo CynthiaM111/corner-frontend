@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import '../styles/loginPage.css'; // Import the CSS file
 
-const LoginPage = () => {
+const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
@@ -85,4 +85,4 @@ const LoginPage = () => {
     );
 };
 
-export default LoginPage;
+export default Login;
