@@ -55,12 +55,12 @@ function App() {
                         )
                     }
                 /> */}
-                <Route exact path="/home" element={<Home />} />
-                <Route path="/signup" element={<Signup />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/logout" element={<LogoutButton />} />
-                <Route path="/add-course" element={<TeacherDashboard />} />
-                <Route path="/select-course" element={<StudentCourseSelection />} />
+                <Route exact path="/" element={<Home />} />
+                <Route exact path="/signup" element={<Signup />} />
+                <Route exact path="/login" element={<Login />} />
+                <Route exact path="/logout" element={<LogoutButton />} />
+                <Route exact path="/add-course" element={<TeacherDashboard />} />
+                <Route exact path="/select-course" element={<StudentCourseSelection />} />
                 <Route path="/student-dashboard"
                     element={role === 'student' ? <StudentDashboard /> : <Login />}
                 />
