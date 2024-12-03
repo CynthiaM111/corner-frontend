@@ -39,22 +39,7 @@ function App() {
 
     return (
         <Router>
-            {/* <div>
-                <LogoutButton />
-            </div> */}
             <Routes>
-                {/* <Route
-                    path="/"
-                    element={
-                        !role ? (
-                            <Login />
-                        ) : role === 'teacher' ? (
-                            <TeacherDashboard />
-                        ) : (
-                            <StudentCourseSelection />
-                        )
-                    }
-                /> */}
                 <Route exact path="/" element={<Home />} />
                 <Route exact path="/signup" element={<Signup />} />
                 <Route exact path="/login" element={<Login />} />
