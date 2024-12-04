@@ -113,7 +113,7 @@ const StudentCourseSelection = () => {
 
     const handleLogout = () => {
         localStorage.removeItem('studentToken');
-        navigate('/home');
+        navigate('/');
     };
     
 
