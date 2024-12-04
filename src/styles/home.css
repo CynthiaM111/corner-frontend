@@ -40,7 +40,8 @@
 }
 
 .auth-buttons .btn-outline-light {
-    color: #003366;
+    color: #FFFFFF;
+    background-color: #003366;
     border: 1px solid #003366;
     transition: all 0.3s ease;
 }
