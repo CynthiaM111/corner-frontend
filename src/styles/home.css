@@ -25,12 +25,16 @@
     font-size: 1.2rem;
     max-width: 600px;
     margin: 0 auto;
+    margin-bottom: 30px;
 }
 
 .auth-buttons .btn {
     padding: 15px 25px;
     font-size: 1.1rem;
     border-radius: 50px;
+}
+.corner-link {
+    background-color: #C0C0C0;
 }
 
 .auth-buttons .btn-primary {
@@ -66,3 +70,4 @@
         margin: 10px 0;
     }
 }
+

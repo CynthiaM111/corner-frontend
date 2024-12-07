@@ -15,6 +15,7 @@ const Home = () => {
             <div className="auth-buttons text-center">
                 <Link to="/login" className="btn btn-lg btn-primary mx-3">Login</Link>
                 <Link to="/signup" className="btn btn-lg btn-outline-light mx-3">Sign Up</Link>
+                <Link to="https://cornerdiscussion.netlify.app/" className="btn btn-lg btn-outline-light mx-3 corner-link">About Corner Discussion</Link>
             </div>
         </div>
     );
