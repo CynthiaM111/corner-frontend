@@ -18,6 +18,7 @@ const QuestionModal = ({ showModal, setShowModal, handleAddQuestion, questionTit
                                         <input
                                             type="text"
                                             className="form-control"
+                                            placeholder="Enter your question title here"
                                             id="questionTitle"
                                             value={questionTitle}
                                             onChange={(e) => setQuestionTitle(e.target.value)}
@@ -30,6 +31,7 @@ const QuestionModal = ({ showModal, setShowModal, handleAddQuestion, questionTit
                                             className="form-control"
                                             id="questionContent"
                                             rows="4"
+                                            placeholder="Describe your question here"
                                             value={questionContent}
                                             onChange={(e) => setQuestionContent(e.target.value)}
                                             required

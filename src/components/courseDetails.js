@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { io } from 'socket.io-client';
 import AddComment from './commentForm';
+import DOMPurify from 'dompurify';
 import QuestionModal from '../utils/questionModal';
 
 const socket = io(`${process.env.REACT_APP_BASE_URL || 'http://localhost:5001'}`);
@@ -13,7 +14,7 @@ const CourseDetails = () => {
     const [questions, setQuestions] = useState([]);
     const [questionContent, setQuestionContent] = useState('');
     const [questionTitle, setQuestionTitle] = useState('');
-    const [setError] = useState('');
+    const [error, setError] = useState('');
     // const [message, setMessage] = useState('');
     const [isStudent, setIsStudent] = useState(false);
     const [isTeacher, setIsTeacher] = useState(false);
@@ -173,7 +174,7 @@ const CourseDetails = () => {
                                         .map((comment) => (
                                             <li key={comment._id} className="mb-2">
                                                 <p className="mb-1" >
-                                                    {comment.text}
+                                                    <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(comment.text) }}></span>
                                                     <span className="text-muted small ms-2">
                                                         - {comment.author?.name || 'Anonymous'} ({timeAgo(comment.timestamp)})
                                                     </span>

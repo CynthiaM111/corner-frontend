@@ -1,19 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
-
+import Quill from 'quill';
+import DOMPurify from 'dompurify';
+import 'quill/dist/quill.snow.css';
+import '../styles/comment.css';
 
 const AddComment = ({ questionId, onCommentAdded }) => {
     const [comment, setComment] = useState('');
     const [error, setError] = useState('');
+    const quillRef = useRef(null);
+    const quillInstance = useRef(null);
     const token = localStorage.getItem('studentToken') || localStorage.getItem('teacherToken');
 
-    const getUserId = () => {
-        const decodedToken = JSON.parse(atob(token.split('.')[1]));
-        return decodedToken._id;
-    };
+    useEffect(() => {
+        if (!quillInstance.current && quillRef.current) {
+            // Initialize Quill only if ref is set
+            quillInstance.current = new Quill(quillRef.current, {
+                theme: 'snow', // Use the Snow theme
+                placeholder: 'Write your comment...',
+                modules: {
+                    toolbar: [
+                        ['bold', 'italic', 'underline'], // Formatting options
+                        [{ list: 'ordered' }, { list: 'bullet' }], // Lists
+                        ['link', 'image'], // Link and image
+                    ],
+                },
+            });
+        }
+    }, []);
+
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!comment.trim()) {
+        const quill= quillInstance.current;
+        const rawHTML = quill.root.innerHTML.trim();
+        const sanitizedHTML = DOMPurify.sanitize(rawHTML);
+
+        if (!sanitizedHTML || sanitizedHTML === '<p><br></p>') {
             setError('Comment cannot be empty');
             return;
         }
@@ -21,12 +44,12 @@ const AddComment = ({ questionId, onCommentAdded }) => {
         try {
             const response = await axios.post(
                 `${process.env.REACT_APP_BASE_URL || 'http://localhost:5001'}/corner/course/question/${questionId}/comments`,
-                { text: comment  },
+                { text: sanitizedHTML  },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             const newComment = response.data.question.comments;
             onCommentAdded(newComment); // Update the parent with new data
-            console.log(newComment);
+            quill.setContents([])
             setComment('');
         } catch (error) {
             setError('Failed to add comment');
@@ -34,15 +57,16 @@ const AddComment = ({ questionId, onCommentAdded }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="d-flex flex-column">
-            <textarea
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                placeholder="Write your comment..."
-                className="form-control mb-2"
-            />
-            <button type="submit" className="btn btn-outline-primary btn-sm">Add Comment</button>
-            {error && <p className="text-danger mt-2" >{error}</p>}
+        <form onSubmit={handleSubmit} className="d-flex flex-column align-items-center">
+            <div
+                ref={quillRef}
+                className="quill-editor mb-2"
+                style={{ width: '100%', minHeight: '150px', border: '1px solid #ccc' }}
+            ></div>
+            <button type="submit" className="btn btn-primary btn-sm w-auto">
+                Add Comment
+            </button>
+            {error && <p className="text-danger mt-2">{error}</p>}
         </form>
     );
 };

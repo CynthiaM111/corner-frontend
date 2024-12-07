@@ -1,0 +1,41 @@
+/* For centering the button inside its container */
+button.btn-primary {
+    background-color: #26547c;
+    /* Set your preferred color */
+    color: white;
+    padding: 8px 5rem;
+    /* Adjust the padding to make it a comfortable size */
+    border-radius: 4px;
+    /* Rounded corners */
+    border: none;
+    font-size: 1.2rem;
+    transition: background-color 0.3s ease;
+    margin-top: 1rem;
+}
+
+button.btn-primary:hover {
+    background-color: #0056b3;
+    /* A darker shade on hover */
+}
+
+form.d-flex {
+    justify-content: center;
+    align-items: center;
+    /* Centers the form vertically */
+    width: 100%;
+    /* Ensures the form is centered horizontally */
+}
+.quill-editor {
+    margin-bottom: 20px;
+    margin-top: 1.2rem;
+    padding: 10px;
+    /* Adds spacing inside the editor */
+    border-radius: 5px;
+    /* Optional, smooths the corners */
+    border: 1px solid #ccc;
+    /* Adjust the spacing as needed */
+}
+/* .textarea-style {
+    width: 100%;
+   tarea */
+/* }  */
