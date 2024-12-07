@@ -5,6 +5,7 @@ import axios from 'axios';
 // import Sidebar from '../components/sidebar';
 import CourseCard from '../components/courseCard';
 import AccountModal from '../utils/accountModal';
+import CourseDetails from '../components/courseDetails';
 import '../styles/teacherdash.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -53,9 +54,9 @@ const TeacherDashboard = () => {
                     Authorization: `Bearer ${token}`, // Replace with your token retrieval logic
                 },
             });
-
-            setUser(response.data);
-            console.log('User info fetched:', response.data);
+            const userInfo = response.data;
+            setUser(userInfo);
+            console.log('User info fetched:', userInfo);
         } catch (error) {
             console.error('Error fetching user info:', error);
         }
@@ -92,7 +93,9 @@ const TeacherDashboard = () => {
     };
         
         return (
+
         <div>
+            
             {/* Navbar */}
             <nav className="navbar navbar-expand-lg navbar-dark custom-navbar">
                 <div className="container-fluid">

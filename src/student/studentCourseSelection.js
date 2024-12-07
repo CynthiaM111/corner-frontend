@@ -187,7 +187,7 @@ const StudentCourseSelection = () => {
                         }}
                     className="btn btn-primary"
                     >
-                        Manage yourAccount
+                        Manage your Account
                         
                     </button>
                 

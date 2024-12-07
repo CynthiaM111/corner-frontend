@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { io } from 'socket.io-client';
 import AddComment from './commentForm';
 import DOMPurify from 'dompurify';
 import QuestionModal from '../utils/questionModal';
+import logo from '../images/favicon-96x96.png';
 
 const socket = io(`${process.env.REACT_APP_BASE_URL || 'http://localhost:5001'}`);
-console.log(process.env.REACT_APP_BASE_URL || 'http://localhost:5001');
-const CourseDetails = () => {
+
+const CourseDetails = ({fetchUserInfo,setAccountModalVisible}) => {
+    const navigate = useNavigate();
     const { courseId } = useParams(); // Get courseId from route parameters
     const [course, setCourse] = useState(null);
     const [questions, setQuestions] = useState([]);
@@ -106,6 +108,11 @@ const CourseDetails = () => {
             setError('Error adding question');
         }
     };
+    const handleLogout = () => {
+        localStorage.removeItem('studentToken');
+        localStorage.removeItem('teacherToken');
+        navigate('/');
+    };
 
     const timeAgo = (timestamp) => {
         const now = new Date();
@@ -120,11 +127,44 @@ const CourseDetails = () => {
     };
 
     return (
+        <>
+        <nav className="navbar navbar-expand-lg navbar-dark custom-navbar ">
+                <div className="container-fluid">
+                    <a className="navbar-brand" href="#">
+                        <img src={logo} alt="Corner Discussion" className="logo" />
+                    </a>
+                    <button
+                        className="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav"
+                        aria-controls="navbarNav"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation"
+                    >
+                        <span className="navbar-toggler-icon"></span>
+                    </button>
+                    <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
+                        <button
+                            className="btn btn-outline-light"
+                            onClick={() => {handleLogout()
+                                // fetchUserInfo();
+                                // setAccountModalVisible(true);
+                            }}
+                        >
+                            Logout
+                        </button>
+                    </div>
+                </div>
+            </nav>
         <div className="container mt-5">
+            {/* Bootstrap Navbar */}
+            
+
             {/* Course Header */}
             <div className="text-center mb-4">
-                <h1 className="display-4">Course Discussion</h1>
-                {course && <h2 className="display-6 text-muted">{course.name}</h2>}
+                {/* <h1 className="display-4">Course Discussion</h1> */}
+                {course && <h2 className="display-6 text-muted mt-3 font-weight-bold">{course.name}</h2>}
             </div>
 
             {/* Questions Section */}
@@ -141,13 +181,17 @@ const CourseDetails = () => {
                     const uniqueKey = `${question._id}-${index}`;
                     const isAnswered = question.comments.some((comment) => comment.author?.role === 'teacher');
                     return (
-                    <div key={uniqueKey} className="card mb-3 shadow-sm">
+                    <div key={uniqueKey} className="card mb-3 shadow-sm" >
                         <div className="card-body">
                             <div className="d-flex justify-content-between align-items-center mb-3">
                                 <h5 className="mb-0 card-title">{question.title}</h5>
                                 <div>
                                     {isAnswered && (<span className="badge bg-success custom-badge me-2">Answered</span>)}
-                                    <span className="badge bg-secondary custom-badge">{question.createdBy?.role || 'Unknown'}</span>
+                                    <span className="badge  custom-badge"
+                                    style={{
+                                        backgroundColor: question.createdBy?.role === 'teacher' ? '#ffc107' : '#6c757d',
+                                        color: question.createdBy?.role === 'teacher' ? '#212529' : 'white',
+                                    }}>{question.createdBy?.role || 'Unknown'}</span>
                                     </div>
                                 </div>
                             <p className="text-muted small" style={{fontSize: '0.9rem'}}>By {question.createdBy?.name || 'Anonymous'} - {timeAgo(question.createdAt)}</p>
@@ -172,13 +216,14 @@ const CourseDetails = () => {
                                         {question.comments
                                         
                                         .map((comment) => (
-                                            <li key={comment._id} className="mb-2">
+                                            <li key={comment._id} className="mb-3 comment-item" >
                                                 <p className="mb-1" >
+                                                    {comment.author?.role === 'teacher' && (<span className="badge bg-danger custom-badge me-2">[Teacher]</span>)}
                                                     <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(comment.text) }}></span>
                                                     <span className="text-muted small ms-2">
                                                         - {comment.author?.name || 'Anonymous'} ({timeAgo(comment.timestamp)})
                                                     </span>
-                                                    {comment.author?.role === 'teacher' && (<span className="badge bg-danger custom-badge me-2">[Teacher]</span>)}
+                                                    
                                                 </p>
                                             </li>
                                         ))}
@@ -206,6 +251,7 @@ const CourseDetails = () => {
                 setQuestionContent={setQuestionContent}
             />
         </div>
+        </>
     );
 };
 
