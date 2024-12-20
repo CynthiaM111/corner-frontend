@@ -11,11 +11,15 @@ const Login = () => {
     const [error, setError] = useState('');
     const [role, setRole] = useState('');
     const navigate = useNavigate();
+    const [verificationCode, setVerificationCode] = useState('');
 
     const handleLogin = async () => {
         try {
             const response = await axios.post(`${process.env.REACT_APP_BASE_URL || 'http://localhost:5001'}/corner/auth/login`, { email, password });
-            const { role, token } = response.data;
+            setMessage('Verification code sent to your email');
+
+            const verifyResponse = await axios.post(`${process.env.REACT_APP_BASE_URL || 'http://localhost:5001'}/corner/auth/verify-code`, { email, verificationCode, });
+            const { role, token } = verifyResponse.data;
 
             // Clear existing tokens
             localStorage.removeItem('teacherToken');
