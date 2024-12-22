@@ -74,6 +74,7 @@ const CourseDetails = ({fetchUserInfo,setAccountModalVisible}) => {
         const decodedToken = JSON.parse(atob(token.split('.')[1]));
         return decodedToken._id;
     };
+    console.log("user id: ", getUserId());
     
     const handleAddQuestion = async (e) => {
         e.preventDefault();
