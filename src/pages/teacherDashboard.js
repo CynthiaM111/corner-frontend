@@ -5,7 +5,7 @@ import axios from 'axios';
 // import Sidebar from '../components/sidebar';
 import CourseCard from '../components/courseCard';
 import AccountModal from '../utils/accountModal';
-import CourseDetails from '../components/courseDetails';
+
 import '../styles/teacherdash.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -14,6 +14,7 @@ const TeacherDashboard = () => {
     const [courses, setCourses] = useState([]);
     const [courseName, setCourseName] = useState('');
     const [courseDescription, setCourseDescription] = useState('');
+  
     const [message, setMessage] = useState('');
     const [accountModalVisible, setAccountModalVisible] = useState(false);
     const [user, setUser] = useState({});
@@ -27,25 +28,28 @@ const TeacherDashboard = () => {
         }
         return null;
     };
-
+  
+    
     const fetchCourses = useCallback(async () => {
         try {
-            const teacherId = getTeacherId();
-            const token = localStorage.getItem('teacherToken');
-            const response = await axios.get(`${process.env.REACT_APP_BASE_URL || 'http://localhost:5001'}/corner/course/get-courses/${teacherId}`, {
+            
+            
+            const response = await axios.get(`${process.env.REACT_APP_BASE_URL || 'http://localhost:5001'}/corner/course/get-teacher-courses`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            
-            const sortedCourses = response.data.courses.filter(course => !isNaN(new Date(course.createdAt).getTime()))
-                                            .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+console.log("Fetched courses: ", response.data.courses);
+setCourses(response.data.courses);
+            // const sortedCourses = response.data.courses
+            //     .filter(course => !isNaN(new Date(course.createdAt).getTime()))
+            //     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
-            setCourses(sortedCourses);
+            // setCourses(sortedCourses);
         } catch (error) {
-            setMessage(error.response?.data?.msg || 'Failed to load courses.');
+            setMessage(error.response?.data?.msg || 'Failed to load courses.'+error.message);
         }
-    }, []);
+    }, [token]);
 
     const fetchUserInfo = async () => {
         try {
@@ -69,6 +73,7 @@ const TeacherDashboard = () => {
     const handleAddCourse = async () => {
         try {
             const teacherId = getTeacherId();
+
             const token = localStorage.getItem('teacherToken');
             await axios.post(
                 `${process.env.REACT_APP_BASE_URL || 'http://localhost:5001'}/corner/course/add-course`,
@@ -82,6 +87,8 @@ const TeacherDashboard = () => {
             setMessage('Course added successfully!');
             fetchCourses();
             setCourseName('');
+            setCourseDescription('');
+           
         } catch (error) {
             setMessage('Failed to add course.');
         }
@@ -89,6 +96,7 @@ const TeacherDashboard = () => {
 
     const handleLogout = () => {
         localStorage.removeItem('teacherToken');
+        // localStorage.removeItem('studentToken');
         navigate('/');
     };
         

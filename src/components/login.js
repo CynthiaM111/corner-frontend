@@ -11,19 +11,13 @@ const Login = () => {
     const [error, setError] = useState('');
     const [role, setRole] = useState('');
     const navigate = useNavigate();
-    const [verificationCode, setVerificationCode] = useState('');
-
+    
     const handleLogin = async () => {
         try {
             const response = await axios.post(`${process.env.REACT_APP_BASE_URL || 'http://localhost:5001'}/corner/auth/login`, { email, password });
-            setMessage('Verification code sent to your email');
 
-            const verifyResponse = await axios.post(`${process.env.REACT_APP_BASE_URL || 'http://localhost:5001'}/corner/auth/verify-code`, { email, verificationCode, });
-            const { role, token } = verifyResponse.data;
-
-            // Clear existing tokens
-            localStorage.removeItem('teacherToken');
-            localStorage.removeItem('studentToken');
+            const { role, token } = response.data;
+           
 
             // Save token to localStorage based on the role
             if (role === 'teacher') {
@@ -32,15 +26,16 @@ const Login = () => {
                 localStorage.setItem('studentToken', token);
             }
 
-            setRole(role); // Set role based on login response
-
+            setRole(role); 
             if (role === 'teacher') {
                 setMessage('Login successful! You are a teacher.');
             } else {
                 setMessage('Login successful! You are a student.');
             }
-        } catch (error) {
-            setError('Login failed. Please try again.');
+            }
+         catch (error) {
+            setError('Login failed. Verify your email or password and try again.');
+            setMessage('');
         }
     };
 
@@ -67,7 +62,6 @@ const Login = () => {
             />
 
             <button className="login-button" onClick={handleLogin}>Login</button>
-            {/* <button  onClick={() => window.location.href = '/signup'}>Signup</button> */}
 
             {message && <p className="message">{message}</p>} {/* Show success message */}
 

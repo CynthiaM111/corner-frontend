@@ -10,7 +10,7 @@ const StudentDashboard = () => {
         
         if (token) {
             const decodedToken = JSON.parse(atob(token.split('.')[1]));
-            console.log(decodedToken);
+            
             return decodedToken._id;
         
         }
@@ -21,23 +21,30 @@ const StudentDashboard = () => {
         try {
             const token = localStorage.getItem('studentToken');
             const studentId = getStudentId();
-            console.log("studentId", studentId);
+           
+            if(!studentId){
+                setMessage('Student not found');
+                return;
+            }
 
-            try {
-                const response = await axios.get(`${process.env.REACT_APP_BASE_URL || 'http://localhost:5001'}/corner/course/get-courses/${studentId}`, {
+            
+                const response = await axios.get(`${process.env.REACT_APP_BASE_URL || 'http://localhost:5001'}/corner/course/get-all-courses`, {
                     headers: {
                         Authorization: `Bearer ${token}`, // Include the token
                     },
                 });
-                console.log("response.data", response.data);
-                setCourses(response.data.courses);
-                console.log("courses", courses);
+
+            const sortedCourses = response.data.courses
+                .filter((course) => !isNaN(new Date(course.createdAt).getTime()))
+                .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+            setCourses(sortedCourses);
+                
+                
             } catch (error) {
-                setMessage('Failed to load selected courses.');
+                setMessage('Failed to load selected courses.'+error.message);
             }
-        } catch (error) {
-            setMessage('Failed to load selected courses.');
-        }
+            
     }, []);
 
     useEffect(() => {

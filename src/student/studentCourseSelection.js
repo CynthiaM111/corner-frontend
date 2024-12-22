@@ -14,8 +14,11 @@ const StudentCourseSelection = () => {
     const navigate = useNavigate();
     const [accountModalVisible, setAccountModalVisible] = useState(false);
     const [user, setUser] = useState({});
-
+    const token = localStorage.getItem('studentToken')|| localStorage.getItem('teacherToken');
     // Get student ID from the token
+
+    const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:5001';
+
     const getStudentId = () => {
         const token = localStorage.getItem('studentToken');
 
@@ -25,6 +28,16 @@ const StudentCourseSelection = () => {
         }
         return null;
     };
+    
+    const getUserRole = () => {
+        const token = localStorage.getItem('studentToken');
+        if (token) {
+            const decodedToken = JSON.parse(atob(token.split('.')[1]));
+            return decodedToken.role;
+        }
+        return null;
+    };
+   
 
     // Load enrolled courses from localStorage
     const loadEnrolledCourses = () => {
@@ -37,20 +50,31 @@ const StudentCourseSelection = () => {
         setEnrolledCourses(loadEnrolledCourses());
         const fetchCourses = async () => {
             try {
-                const response = await axios.get(`${process.env.REACT_APP_BASE_URL || 'http://localhost:5001'}/corner/course/get-all-courses`);
-                setCourses(response.data.courses);
+                const role = getUserRole();
+
+                const response = (role === 'student') ? await axios.get(`${baseUrl}/corner/course/get-student-courses`, {
+                        headers: { Authorization: `Bearer ${token}` },
+                    }) 
+
+
+                    : await axios.get(`${baseUrl}/corner/course/get-all-courses`, {
+                        headers: { Authorization: `Bearer ${token}` },
+                    });
+console.log("response", response.data.courses);
+                    setCourses(response.data.courses);
+                
             } catch (error) {
-                setMessage('Failed to load courses.');
+                setMessage('Failed to load courses.'+error.message);
             }
         };
 
         fetchCourses();
-    }, []);
+    }, [token]);
 
     const fetchUserInfo = async () => {
         try {
             const token = localStorage.getItem('studentToken');
-            const response = await axios.get(`${process.env.REACT_APP_BASE_URL || 'http://localhost:5001'}/corner/user/get-user-info`, {
+            const response = await axios.get(`${baseUrl}/corner/user/get-user-info`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -77,17 +101,18 @@ const StudentCourseSelection = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const studentId = getStudentId();
+        console.log("studentId", studentId);
         const courseIds = selectedCourses;
 
-        if (!studentId) {
-            setMessage('Student ID not found. Please log in again.');
-            return;
-        }
+        // if (!studentId) {
+        //     setMessage('Student ID not found. Please log in again.');
+        //     return;
+        // }
 
         try {
             const token = localStorage.getItem('studentToken');
             const response = await axios.post(
-                `${process.env.REACT_APP_BASE_URL || 'http://localhost:5001'}/corner/course/enroll-in-courses`,
+                `${baseUrl}/corner/course/enroll-in-courses`,
                 { studentId: studentId, courses: courseIds },
                 {
                     headers: {

@@ -14,7 +14,7 @@ const useAutoLogout = () => {
                 localStorage.removeItem('teacherToken');
                 localStorage.removeItem('studentToken');
                 window.location.href = '/login';  // Redirect to login page after 10 minutes of inactivity
-            }, 600000);  // 10 minutes in milliseconds
+            }, 1800000);  // 10 minutes in milliseconds
         };
 
         const events = ['mousemove', 'keydown', 'scroll', 'click'];
