@@ -9,7 +9,7 @@ import CourseDetails from './components/courseDetails';
 import Home from './components/home';
 import useAutoLogout from './hooks/autoLogout';
 import LogoutButton from './components/logoutButton';
-import RegisterSchool from './components/registerSchool';
+// import RegisterSchool from './components/registerSchool';
 import VerifyEmail from './components/verifyEmail';
 function App() {
     useAutoLogout();
@@ -48,7 +48,7 @@ function App() {
                 <Route exact path="/logout" element={<LogoutButton />} />
                 <Route exact path="/add-course" element={<TeacherDashboard />} />
                 <Route exact path="/select-course" element={<StudentCourseSelection />} />
-                <Route exact path="/register-school" element={<RegisterSchool />} />
+                {/* <Route exact path="/register-school" element={<RegisterSchool />} /> */}
                 <Route path="/student-dashboard"
                     element={role === 'student' ? <StudentDashboard /> : <Login />}
                 />
