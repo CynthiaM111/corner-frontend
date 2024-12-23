@@ -68,7 +68,8 @@ setCourses(response.data.courses);
 
     useEffect(() => {
         fetchCourses();
-    }, [fetchCourses]);
+        fetchUserInfo();
+    }, [fetchCourses, fetchUserInfo]);
 
     const handleAddCourse = async () => {
         try {

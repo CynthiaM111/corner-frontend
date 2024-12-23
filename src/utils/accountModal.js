@@ -2,7 +2,9 @@ import React from 'react';
 
 const AccountModal = ({ accountModalVisible, setAccountModalVisible, user, onLogout }) => {
     if(!accountModalVisible) return null;
-    console.log(accountModalVisible);
+   
+    console.log("user: ", user);
+    console.log("user role: ", user.role);
     return (
         <>
             {accountModalVisible && (
@@ -19,13 +21,16 @@ const AccountModal = ({ accountModalVisible, setAccountModalVisible, user, onLog
                                 ></button>
                             </div>
                             <div className="modal-body">
-                                {user.name && user.role ? (
+                                {user.name && user.role && user.school? (
                                     <>
                                         <p>
                                             <strong>Name:</strong> {user.name}
                                         </p>
                                         <p>
                                             <strong>Role:</strong> {user.role}
+                                        </p>
+                                        <p>
+                                            <strong>School:</strong> {user.school}
                                         </p>
                                     </>
                                 ) : (

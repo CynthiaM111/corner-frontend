@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import AccountModal from '../utils/accountModal';
 import '../styles/student.css';
-// import AccountModal from '../utils/accountModal';
 
 const StudentCourseSelection = () => {
-    
     const [courses, setCourses] = useState([]);
     const [selectedCourses, setSelectedCourses] = useState([]);
     const [message, setMessage] = useState('');
@@ -14,95 +13,61 @@ const StudentCourseSelection = () => {
     const navigate = useNavigate();
     const [accountModalVisible, setAccountModalVisible] = useState(false);
     const [user, setUser] = useState({});
-    const token = localStorage.getItem('studentToken')|| localStorage.getItem('teacherToken');
-    // Get student ID from the token
-
+    const token = localStorage.getItem('studentToken') || localStorage.getItem('teacherToken');
     const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:5001';
 
-    const getStudentId = () => {
-        const token = localStorage.getItem('studentToken');
-
-        if (token) {
-            const decodedToken = JSON.parse(atob(token.split('.')[1]));
-            return decodedToken._id;
+    // Function to fetch and set user details
+    const fetchUserInfo = async () => {
+        try {
+            const response = await axios.get(`${baseUrl}/corner/user/get-user-info`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            setUser(response.data);
+            console.log("user: ", response.data.user);
+        } catch (error) {
+            console.error('Failed to fetch user info:', error);
+            setMessage('Failed to load user info.');
         }
-        return null;
     };
-    
-    const getUserRole = () => {
-        const token = localStorage.getItem('studentToken');
-        if (token) {
-            const decodedToken = JSON.parse(atob(token.split('.')[1]));
-            return decodedToken.role;
-        }
-        return null;
-    };
-   
 
     // Load enrolled courses from localStorage
     const loadEnrolledCourses = () => {
         return JSON.parse(localStorage.getItem('enrolledCourses')) || [];
     };
 
-
-    // Fetch all available courses when the component is mounted
+    // Fetch courses on component mount
     useEffect(() => {
         setEnrolledCourses(loadEnrolledCourses());
+
         const fetchCourses = async () => {
             try {
-                const role = getUserRole();
-
-                const response = (role === 'student') ? await axios.get(`${baseUrl}/corner/course/get-student-courses`, {
-                        headers: { Authorization: `Bearer ${token}` },
-                    }) 
-
-
-                    : await axios.get(`${baseUrl}/corner/course/get-all-courses`, {
-                        headers: { Authorization: `Bearer ${token}` },
-                    });
-console.log("response", response.data.courses);
-                    setCourses(response.data.courses);
-                
+                const response = await axios.get(`${baseUrl}/corner/course/get-student-courses`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                setCourses(response.data.courses);
             } catch (error) {
-                setMessage('Failed to load courses.'+error.message);
+                setMessage(`Failed to load courses. ${error.message}`);
             }
         };
 
         fetchCourses();
+        
+        fetchUserInfo();
     }, [token]);
-
-    const fetchUserInfo = async () => {
-        try {
-            const token = localStorage.getItem('studentToken');
-            const response = await axios.get(`${baseUrl}/corner/user/get-user-info`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            setUser(response.data.user); // Assuming the response data has the user info
-        } catch (error) {
-            console.error('Failed to fetch user info:', error);
-            setMessage('Failed to load user info');
-        }
-    };
 
     // Handle course selection (enroll or remove)
     const handleCourseSelection = (courseId) => {
-        setSelectedCourses((prevSelectedCourses) => {
-            if (prevSelectedCourses.includes(courseId)) {
-                return prevSelectedCourses.filter(id => id !== courseId); // Deselect if already selected
-            } else {
-                return [...prevSelectedCourses, courseId]; // Add to selected if not selected
-            }
-        });
+        setSelectedCourses((prevSelectedCourses) =>
+            prevSelectedCourses.includes(courseId)
+                ? prevSelectedCourses.filter((id) => id !== courseId)
+                : [...prevSelectedCourses, courseId]
+        );
     };
 
     // Handle submitting the selected courses for enrollment
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const studentId = getStudentId();
-        console.log("studentId", studentId);
-        const courseIds = selectedCourses;
+        const studentId = user?._id;
 
         // if (!studentId) {
         //     setMessage('Student ID not found. Please log in again.');
@@ -110,25 +75,17 @@ console.log("response", response.data.courses);
         // }
 
         try {
-            const token = localStorage.getItem('studentToken');
             const response = await axios.post(
                 `${baseUrl}/corner/course/enroll-in-courses`,
-                { studentId: studentId, courses: courseIds },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
+                { studentId, courses: selectedCourses },
+                { headers: { Authorization: `Bearer ${token}` } }
             );
 
             if (response.status === 200) {
                 setMessage('Courses enrolled successfully!');
-                // Update the enrolled courses state
                 const updatedEnrolledCourses = [...enrolledCourses, ...selectedCourses];
                 setEnrolledCourses(updatedEnrolledCourses);
-                setSelectedCourses([]); // Clear selected courses
-
-                // Save the updated list of enrolled courses to localStorage
+                setSelectedCourses([]);
                 localStorage.setItem('enrolledCourses', JSON.stringify(updatedEnrolledCourses));
             }
         } catch (error) {
@@ -140,7 +97,6 @@ console.log("response", response.data.courses);
         localStorage.removeItem('studentToken');
         navigate('/');
     };
-    
 
     // Render content based on the active tab
     const renderContent = () => {
@@ -202,76 +158,13 @@ console.log("response", response.data.courses);
                     </ul>
                 </div>
             );
-        } else if (activeTab === 'Account') {
-            return (
-                <div>
-                <button
-                    onClick={() => {
-                        fetchUserInfo();
-                        setAccountModalVisible(true);
-                        }}
-                    className="btn btn-primary"
-                    >
-                        Manage your Account
-                        
-                    </button>
-                
-
-                { accountModalVisible && (
-                    <div className="modal show d-block" tabIndex="-1" role="dialog" style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
-                        <div className="modal-dialog" role="document">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h5 className="modal-title">Account Details</h5>
-                                    <button
-                                        type="button"
-                                        className="btn-close"
-                                        aria-label="Close"
-                                        onClick={() => setAccountModalVisible(false)}
-                                    ></button>
-                                </div>
-                                <div className="modal-body">
-                                    {user && user.name && user.role ? (
-                                        <>
-                                            <p>
-                                                <strong>Name:</strong> {user.name}
-                                            </p>
-                                            <p>
-                                                <strong>Role:</strong> {user.role}
-                                            </p>
-                                        </>
-                                    ) : (
-                                        <p>Loading user details...</p>
-                                    )}
-                                </div>
-                                <div className="modal-footer">
-                                    <button
-                                        type="button"
-                                        className="btn btn-secondary"
-                                        onClick={() => setAccountModalVisible(false)}
-                                    >
-                                        Close
-                                    </button>
-                                    <button
-                                        type="button"
-                                        className="btn btn-primary"
-                                        onClick={handleLogout}
-                                    >
-                                        Logout
-                                    </button>
-                                </div>
-                            </div>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            );
-        }
+        } 
+        return null;
     };
+        
 
     return (
         <div>
-            {/* Bootstrap Navbar */}
             <nav className="navbar navbar-expand-lg navbar-dark custom-navbar mb-4">
                 <div className="container">
                     <a className="navbar-brand" href="#">Student Portal</a>
@@ -291,9 +184,10 @@ console.log("response", response.data.courses);
                             Courses
                         </a>
                         <a
-                            className={`nav-link ${activeTab === 'Account' ? 'active' : ''}`}
+                            className={`nav-link` }
                             href="#"
-                            onClick={() => setActiveTab('Account')}
+                            onClick={() =>{
+                                fetchUserInfo();setAccountModalVisible(true)}}
                         >
                             Account
                         </a>
@@ -301,24 +195,24 @@ console.log("response", response.data.courses);
                 </div>
             </nav>
 
-            {/* Render content based on active tab */}
             <div className="container">
                 {renderContent()}
                 {message && (
-                    <div className="alert alert-info mt-3 alert-dismissible fade show" role="alert">
+                    <div className="alert alert-info mt-3" role="alert">
                         {message}
-                        <button
-                            type="button"
-                            className="btn-close"
-                            data-bs-dismiss="alert"
-                            onClick={() => setMessage('')}
-                            aria-label="Close"></button>
                     </div>
                 )}
             </div>
-            
+           
+            {accountModalVisible && (
+                <AccountModal
+                    accountModalVisible={accountModalVisible}
+                    setAccountModalVisible={setAccountModalVisible}
+                    user={user}
+                    onLogout={handleLogout}
+                />
+            )}
         </div>
-        
     );
 };
 
