@@ -24,7 +24,7 @@ const TeacherDashboard = () => {
         const token = localStorage.getItem('teacherToken');
         if (token) {
             const decodedToken = JSON.parse(atob(token.split('.')[1]));
-            return decodedToken._id;
+            return decodedToken.userId;
         }
         return null;
     };

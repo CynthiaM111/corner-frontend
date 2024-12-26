@@ -24,7 +24,7 @@ const CourseDetails = ({fetchUserInfo,setAccountModalVisible}) => {
     const token = localStorage.getItem('studentToken') || localStorage.getItem('teacherToken'); // Assuming token is stored in localStorage
 
     // Fetch course details and questions
-
+    console.log("course id: ", courseId);
     useEffect(() => {
         
         if (token) {
@@ -72,9 +72,9 @@ const CourseDetails = ({fetchUserInfo,setAccountModalVisible}) => {
     // Handle adding a new question
     const getUserId = () => {
         const decodedToken = JSON.parse(atob(token.split('.')[1]));
-        return decodedToken._id;
+        return decodedToken.userId;
     };
-    console.log("user id: ", getUserId());
+    
     
     const handleAddQuestion = async (e) => {
         e.preventDefault();
@@ -165,7 +165,7 @@ const CourseDetails = ({fetchUserInfo,setAccountModalVisible}) => {
             {/* Course Header */}
             <div className="text-center mb-4">
                 {/* <h1 className="display-4">Course Discussion</h1> */}
-                {course && <h2 className="display-6 text-muted mt-3 font-weight-bold">{course.name}</h2>}
+                {course && <h2 className="display-6 text-muted mt-3 font-weight-bold">{course.name?course.name:"Course Name"}</h2>}
             </div>
 
             {/* Questions Section */}
