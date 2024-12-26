@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
-const QuestionModal = ({ showModal, setShowModal, handleAddQuestion, questionTitle, setQuestionTitle, questionContent, setQuestionContent }) => {
+const QuestionModal = ({ showModal, setShowModal, handleAddQuestion, questionTitle, setQuestionTitle, questionContent, setQuestionContent, isAnonymous, setIsAnonymous, userRole }) => {
+    
     return (
         <div>
             {showModal && (
@@ -36,6 +37,22 @@ const QuestionModal = ({ showModal, setShowModal, handleAddQuestion, questionTit
                                             onChange={(e) => setQuestionContent(e.target.value)}
                                             required
                                         />
+                                        {/* Anonymity Checkbox */}
+                                        {userRole === 'student' && (
+                                        <div className="mb-3 form-check">
+                                            <input
+                                                type="checkbox"
+                                                className="form-check-input"
+                                                id="anonymousCheck"
+                                                checked={isAnonymous}
+                                                onChange={(e) => setIsAnonymous(e.target.checked)}
+                                            />
+                                            <label className="form-check-label" htmlFor="anonymousCheck">
+                                                Post as Anonymous
+                                            </label>
+                                        </div>
+                                        )}
+
                                     </div>
                                     <button type="submit" className="btn btn-primary">Add Question</button>
                                 </form>

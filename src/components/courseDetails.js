@@ -23,7 +23,9 @@ const CourseDetails = ({fetchUserInfo,setAccountModalVisible}) => {
     const [isStudent, setIsStudent] = useState(false);
     const [isTeacher, setIsTeacher] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [isAnonymous, setIsAnonymous] = useState(false);
     const [user, setUser] = useState({});
+    const [userRole, setUserRole] = useState('student');
     const token = localStorage.getItem('studentToken') || localStorage.getItem('teacherToken'); // Assuming token is stored in localStorage
 
     // Fetch course details and questions
@@ -80,7 +82,11 @@ const CourseDetails = ({fetchUserInfo,setAccountModalVisible}) => {
         const decodedToken = JSON.parse(atob(token.split('.')[1]));
         return decodedToken.userId;
     };
-    
+   
+    const getsUserRole = () => {
+        const decodedToken = JSON.parse(atob(token.split('.')[1]));
+        return decodedToken.role;
+    };
     
     const handleAddQuestion = async (e) => {
         e.preventDefault();
@@ -93,7 +99,8 @@ const CourseDetails = ({fetchUserInfo,setAccountModalVisible}) => {
                 courseId,
                 content: questionContent,
                 title: questionTitle,
-                createdBy: getUserId()
+                createdBy: getUserId(),
+                isAnonymous: isAnonymous
             }, {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -205,7 +212,7 @@ const CourseDetails = ({fetchUserInfo,setAccountModalVisible}) => {
                                     }}>{question.createdBy?.role || 'Unknown'}</span>
                                     </div>
                                 </div>
-                            <p className="text-muted small" style={{fontSize: '0.9rem'}}>By {question.createdBy?.name || 'Anonymous'} - {timeAgo(question.createdAt)}</p>
+                            <p className="text-muted small" style={{fontSize: '0.9rem'}}>By {question.isAnonymous ? 'Anonymous' : question.createdBy?.name||'Unknown'} - {timeAgo(question.createdAt)}</p>
                             <p className="mb-3 card-text">{question.content}</p>
                             <AddComment
                                 questionId={question._id}
@@ -261,7 +268,13 @@ const CourseDetails = ({fetchUserInfo,setAccountModalVisible}) => {
                 setQuestionTitle={setQuestionTitle}
                 questionContent={questionContent}
                 setQuestionContent={setQuestionContent}
+                isAnonymous={isAnonymous}
+                setIsAnonymous={setIsAnonymous}
+                userRole={getsUserRole()}
+                
             />
+                
+            
         </div>
         </>
     );
