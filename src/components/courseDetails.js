@@ -5,6 +5,7 @@ import { io } from 'socket.io-client';
 import AddComment from './commentForm';
 import DOMPurify from 'dompurify';
 import QuestionModal from '../utils/questionModal';
+import Announcements from './announcement';
 import logo from '../images/favicon-96x96.png';
 
 const socket = io(`${process.env.REACT_APP_BASE_URL || 'http://localhost:5001'}`);
@@ -16,15 +17,17 @@ const CourseDetails = ({fetchUserInfo,setAccountModalVisible}) => {
     const [questions, setQuestions] = useState([]);
     const [questionContent, setQuestionContent] = useState('');
     const [questionTitle, setQuestionTitle] = useState('');
+    const [announcements, setAnnouncements] = useState([]);
     const [error, setError] = useState('');
     // const [message, setMessage] = useState('');
     const [isStudent, setIsStudent] = useState(false);
     const [isTeacher, setIsTeacher] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [user, setUser] = useState({});
     const token = localStorage.getItem('studentToken') || localStorage.getItem('teacherToken'); // Assuming token is stored in localStorage
 
     // Fetch course details and questions
-    console.log("course id: ", courseId);
+    
     useEffect(() => {
         
         if (token) {
@@ -61,6 +64,9 @@ const CourseDetails = ({fetchUserInfo,setAccountModalVisible}) => {
         socket.on('newComment',({questionId,updatedComments})=>{
             setQuestions((prevQuestions)=>prevQuestions.map((question)=>question._id===questionId?{...question,comments:updatedComments}:question));
         });
+        // socket.on('newAnnouncement',(newAnnouncement)=>{
+        //     setAnnouncements((prev) => [newAnnouncement, ...prev]);
+        // });
 
         return () => {
             socket.emit('leaveCourseRoom',courseId);
@@ -168,6 +174,10 @@ const CourseDetails = ({fetchUserInfo,setAccountModalVisible}) => {
                 {course && <h2 className="display-6 text-muted mt-3 font-weight-bold">{course.name?course.name:"Course Name"}</h2>}
             </div>
 
+                {/* Announcements Section */}
+                <Announcements courseId={courseId} />
+
+
             {/* Questions Section */}
             <div className=" mb-3">
                 <h3 className="display-6 mb-3">Questions</h3>
@@ -240,6 +250,7 @@ const CourseDetails = ({fetchUserInfo,setAccountModalVisible}) => {
                 ) : (
                     <p>No questions yet. Be the first to ask!</p>
                 )}
+                
 
             {/* Modal for Adding Question */}
             <QuestionModal
