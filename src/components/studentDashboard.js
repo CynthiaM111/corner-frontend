@@ -11,7 +11,7 @@ const StudentDashboard = () => {
         if (token) {
             const decodedToken = JSON.parse(atob(token.split('.')[1]));
             
-            return decodedToken._id;
+            return decodedToken.userId;
         
         }
         return null;
