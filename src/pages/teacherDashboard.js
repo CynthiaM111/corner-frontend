@@ -3,9 +3,9 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 // import Sidebar from '../components/sidebar';
-import CourseCard from '../components/courseCard';
+import CourseCard from '../components/course/CourseCard';
 import AccountModal from '../utils/accountModal';
-
+import TeacherLayout from '../layouts/TeacherLayout';
 import '../styles/teacherdash.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -77,7 +77,7 @@ setCourses(response.data.courses);
 
             const token = localStorage.getItem('teacherToken');
             await axios.post(
-                `${process.env.REACT_APP_BASE_URL || 'http://localhost:5001'}/corner/course/add-course`,
+                `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5001'}/corner/course/add-course`,
                 { name: courseName, teacherId, description: courseDescription },
                 {
                     headers: {
@@ -103,7 +103,8 @@ setCourses(response.data.courses);
         
         return (
 
-        <div>
+        <TeacherLayout> 
+        <div p-6>
             
             {/* Navbar */}
             <nav className="navbar navbar-expand-lg navbar-dark custom-navbar">
@@ -193,6 +194,7 @@ setCourses(response.data.courses);
                     onLogout={handleLogout}
                 />
         </div>
+        </TeacherLayout>
     );
 };
 

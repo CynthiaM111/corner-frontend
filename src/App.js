@@ -5,7 +5,7 @@ import Login from './components/login';
 import TeacherDashboard from './pages/teacherDashboard';
 import StudentCourseSelection from './student/studentCourseSelection';
 import StudentDashboard from './components/studentDashboard';
-import CourseDetails from './components/courseDetails';
+import CourseDetails from './components/course/CourseDetails';
 import Home from './components/home';
 import useAutoLogout from './hooks/autoLogout';
 import LogoutButton from './components/logoutButton';
