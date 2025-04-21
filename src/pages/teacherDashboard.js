@@ -103,99 +103,79 @@ setCourses(response.data.courses);
         
         return (
 
-        <TeacherLayout> 
-        <div p-6>
-            
-            {/* Navbar */}
-            <nav className="navbar navbar-expand-lg navbar-dark custom-navbar">
-                <div className="container-fluid">
-                    <a className="navbar-brand" href="/teacher-dashboard">
-                        Dashboard
-                    </a>
-                    <button
-                        className="navbar-toggler"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#navbarNav"
-                        aria-controls="navbarNav"
-                        aria-expanded="false"
-                        aria-label="Toggle navigation"
-                    >
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-                    <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
-                        <button
-                            className="btn btn-outline-light"
-                            onClick={() => {
-                                fetchUserInfo();
-                                setAccountModalVisible(true);
-                            }}
-                        >
-                            Account
-                        </button>
+            <TeacherLayout>
+                <div className="w-full p-4">
+                    {/* Reduced padding from p-6 to p-4 for tighter layout */}
+                    {/* Clean Header */}
+                    <div className="border-b border-gray-200 pb-3 mb-4 w-full">
+                        {/* Reduced pb-4 to pb-3 and mb-6 to mb-4 for less vertical spacing */}
+                        <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
                     </div>
-                </div>
-            </nav>
 
-            {/* Main Content */}
-            <div className="teacher-dashboard d-flex" style={{ height: '100vh' }}>
-                <div className="main-content p-4 w-100">
-                    {/* <h2 className="mb-4">Teacher Dashboard</h2> */}
+                    <div className="flex h-screen bg-gray-100">
+                        <div className="flex-1 p-5 overflow-y-auto">
+                            {/* Add Course Section */}
+                            <div className="p-5 bg-gray-100 rounded shadow-sm mb-6 bg-white">
+                                <h4 className="mb-4 text-lg font-semibold">Add a New Course</h4>
+                                <div className="flex flex-col md:flex-row md:items-start gap-4 w-full">
+                                    <input
+                                        type="text"
+                                        className="min-w-[250px] h-10 px-3 border border-gray-300 rounded-md flex-grow"
+                                        placeholder="Course Name"
+                                        value={courseName}
+                                        onChange={(e) => setCourseName(e.target.value)}
+                                    />
+                                    <textarea
+                                        className="min-w-[250px] h-10 px-3 border border-gray-300 rounded-md flex-grow resize-none"
+                                        placeholder="Course Description"
+                                        rows={3}
+                                        value={courseDescription}
+                                        onChange={(e) => setCourseDescription(e.target.value)}
+                                    />
+                                    <button
+                                        className="min-w-[150px] h-10 px-5 bg-rose-700 text-white font-bold rounded-md hover:bg-rose-800"
+                                        onClick={handleAddCourse}
+                                    >
+                                        Add Course
+                                    </button>
+                                </div>
+                            </div>
 
-                    {/* Add Course Section */}
-                    <div className="add-course-section p-4 bg-light rounded shadow-sm mb-4">
-                        <h4 className="mb-3">Add a New Course</h4>
-                        <div className="d-flex flex-column flex-md-row align-items-start w-100">
-                            <input
-                                type="text"
-                                className="form-control mb-3 mb-md-0 mr-md-3"
-                                placeholder="Course Name"
-                                value={courseName}
-                                onChange={(e) => setCourseName(e.target.value)}
-                            />
-                            <textarea
-                                className="form-control mb-3 mb-md-0 mr-md-3"
-                                placeholder="Course Description"
-                                rows={3}
-                                value={courseDescription}
-                                onChange={(e) => setCourseDescription(e.target.value)}
-                            />
-                            <button className="btn btn-primary" onClick={handleAddCourse}>
-                                Add Course
-                            </button>
+                            {/* Success Message */}
+                            {message && (
+                                <div className="mb-4 p-4 bg-green-100 border border-green-400 text-green-800 rounded relative">
+                                    <strong>{message}</strong>
+                                    <button
+                                        type="button"
+                                        className="absolute top-2 right-2 text-green-800"
+                                        aria-label="Close"
+                                        onClick={() => setMessage('')}
+                                    >
+                                        ×
+                                    </button>
+                                </div>
+                            )}
+
+                            {/* Your Courses */}
+                            <h4 className="mb-4 text-lg text-rose-700 font-semibold ">Your Courses</h4>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {courses.map((course) => (
+                                    <CourseCard key={course._id} course={course} />
+                                ))}
+                            </div>
                         </div>
                     </div>
-                    {message && (
-                        <div className="alert alert-success alert-dismissible fade show" role="alert">
-                            <strong>{message}</strong>
-                            <button
-                                type="button"
-                                className="btn-close"
-                                aria-label="Close"
-                                onClick={() => setMessage('')}
-                            ></button>
-                        </div>
-                    )}
 
-                    <h4 className="mb-3">Your Courses</h4>
-                    <div className="row">
-                        {courses.map((course) => (
-                            <CourseCard key={course._id} course={course} />
-                        ))}
-                    </div>
+                    {/* Account Modal */}
+                    <AccountModal
+                        accountModalVisible={accountModalVisible}
+                        setAccountModalVisible={setAccountModalVisible}
+                        user={user}
+                        onLogout={handleLogout}
+                    />
                 </div>
-            </div>
-
-            {/* Account Modal */}
-                <AccountModal
-                    accountModalVisible={accountModalVisible}
-                    setAccountModalVisible={setAccountModalVisible}
-                    user={user}
-                    onLogout={handleLogout}
-                />
-        </div>
-        </TeacherLayout>
-    );
+            </TeacherLayout>
+        );
 };
 
 export default TeacherDashboard;

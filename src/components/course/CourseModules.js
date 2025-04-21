@@ -1,52 +1,39 @@
-import { useState } from 'react';
 import { FaPlus, FaChevronDown, FaChevronRight } from 'react-icons/fa';
+import AddModuleForm from '../module/AddModuleForm';
+import { useState } from 'react';
 
-const CourseModules = ({ courseId }) => {
-    const [modules, setModules] = useState([]);
-    const [newModuleTitle, setNewModuleTitle] = useState('');
+const CourseModules = ({ courseId, teacherId }) => {
+    const [showAddModuleForm, setShowAddModuleForm] = useState(false);
     const [expandedModules, setExpandedModules] = useState({});
-
-    const handleCreateModule = () => {
-        if (!newModuleTitle.trim()) return;
-
-        const newModule = {
-            id: Date.now().toString(),
-            title: newModuleTitle,
-            items: [],
-            createdAt: new Date().toISOString(),
-        };
-
-        setModules([...modules, newModule]);
-        setNewModuleTitle('');
-    };
-
     const toggleModule = (moduleId) => {
         setExpandedModules(prev => ({
             ...prev,
             [moduleId]: !prev[moduleId]
         }));
     };
+  
 
     return (
-        <div className="space-y-4">
-            <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-gray-800">Course Modules</h2>
-                <div className="flex space-x-2">
-                    <input
-                        type="text"
-                        value={newModuleTitle}
-                        onChange={(e) => setNewModuleTitle(e.target.value)}
-                        placeholder="Module title"
-                        className="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                    <button
-                        onClick={handleCreateModule}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                        <FaPlus className="inline mr-1" /> Add Module
-                    </button>
-                </div>
-            </div>
+        <div className="space-y-6">
+            {/* Title */}
+            <h2 className="text-2xl font-bold text-gray-500">Course Modules</h2>
+            <button
+                className="flex items-center font-bold px-4 py-2 bg-red-700 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
+                style={{ backgroundColor: '#b91c1c' }}
+                onClick={() => {
+                    setShowAddModuleForm(true);
+                }}
+            >
+                <FaPlus className="mr-2 ml-2" /> Add Module
+            </button>
+
+            {showAddModuleForm && (
+                <AddModuleForm
+                    courseId={courseId}
+                    onSuccess={() => setShowAddModuleForm(false)}
+                    teacherId={teacherId}
+                />
+            )}
 
             {modules.length === 0 ? (
                 <div className="text-center py-12 bg-white rounded-lg shadow">
