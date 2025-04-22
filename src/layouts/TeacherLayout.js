@@ -1,18 +1,26 @@
 // src/layouts/TeacherLayout.js
 import React from 'react';
 import { FaBookOpen, FaUsers, FaCog, FaHome } from 'react-icons/fa';
-import { Link, useLocation } from 'react-router-dom';
+import Link from 'next/link';
+import { useNavigate } from 'react-router-dom';
+
 
 // import { useRouter } from 'next/router';
-// const TeacherLayout = ({ children }) => {
+import { useLocation } from 'react-router-dom';
 const TeacherLayout = ({ children }) => {
     const location = useLocation();
+    const navigate = useNavigate();
     const menuItems = [
         { name: 'Dashboard', icon: FaHome, path: '/teacher-dashboard' },
         { name: 'Courses', icon: FaBookOpen, path: '/teacher-courses' },
         { name: 'Students', icon: FaUsers, path: '/teacher-students' },
         { name: 'Settings', icon: FaCog, path: '/teacher-settings' },
     ];
+    const handleLogout = () => {
+        localStorage.removeItem('teacherToken');
+        localStorage.removeItem('studentToken');
+        navigate('/login');
+    };
 
     return (
         <div className="flex min-h-screen bg-gray-100">
@@ -34,8 +42,8 @@ const TeacherLayout = ({ children }) => {
                         const isActive = location.pathname === item.path;
                         return (
                             <Link
+                                href={item.path}
                                 key={item.name}
-                                to={item.path}
                                 className="!no-underline w-full"
                             >
                                 <button
@@ -54,6 +62,7 @@ const TeacherLayout = ({ children }) => {
                         );
                     })}
                 </nav>
+                <button onClick={handleLogout} className="mt-4 w-full text-left flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-rose-100">Logout</button>
             </div>
 
             {/* Main Content */}

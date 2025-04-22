@@ -1,7 +1,9 @@
 // ModuleItemCard.js
 import { useState } from 'react';
 import axios from 'axios';
+import EditItemForm from './EditItemForm';
 import { FaEdit, FaTrash } from 'react-icons/fa';
+
 export default function ModuleItemCard({ item, teacherId, onDelete, onUpdate }) {
     const [isEditing, setIsEditing] = useState(false);
     const url = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5001';
@@ -55,12 +57,12 @@ export default function ModuleItemCard({ item, teacherId, onDelete, onUpdate }) 
                         )}
                         {item.type === 'document' && (
                             <a
-                                href={`/uploads/${item.file.path}`}
+                                href={`${url}/uploads/${item.file.path}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-blue-600 hover:underline mt-1 inline-block"
                             >
-                                Download File
+                                Download File {item.file.originalname}
                             </a>
                         )}
                     </div>

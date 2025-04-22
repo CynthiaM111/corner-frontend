@@ -1,10 +1,12 @@
 // EditItemForm.js
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 export default function EditItemForm({ item, onSuccess, onCancel }) {
     const [title, setTitle] = useState(item.title);
     const [content, setContent] = useState(item.content?.text || '');
     const [isLoading, setIsLoading] = useState(false);
+    const URL = process.env.NEXT_PUBLIC_BASE_URL||'http://localhost:5001';
 
     useEffect(() => {
         setTitle(item.title);
@@ -16,19 +18,20 @@ export default function EditItemForm({ item, onSuccess, onCancel }) {
         setIsLoading(true);
 
         try {
-            const res = await fetch(`/api/module-items/${item._id}`, {
-                method: 'PUT',
+            const res = await axios.put(`${URL}/corner/module-items/${item._id}`, {
+                title,
+                type: item.type,
+                ...(item.type === 'text' && { content: { text: content } })
+                
+            }, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem('teacherToken')}`
                 },
-                body: JSON.stringify({
-                    title,
-                    ...(item.type === 'text' && { textContent: content })
-                })
+                
             });
 
-            if (res.ok) {
+            if (res.status === 200) {
                 onSuccess();
             }
         } catch (err) {

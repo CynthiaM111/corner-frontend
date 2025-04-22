@@ -1,6 +1,8 @@
 // FileUploadForm.js
 import { useState } from 'react';
+import axios from 'axios';
 
+const URL = process.env.NEXT_PUBLIC_BASE_URL||'http://localhost:5001';
 export default function FileUploadForm({ moduleId, type, onSuccess }) {
     const [title, setTitle] = useState('');
     const [file, setFile] = useState(null);
@@ -19,15 +21,15 @@ export default function FileUploadForm({ moduleId, type, onSuccess }) {
         formData.append('moduleId', moduleId);
 
         try {
-            const res = await fetch('/api/module-items', {
-                method: 'POST',
+            const res = await axios.post(`${URL}/corner/module-items/`, formData, {
                 headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('teacherToken')}`
+                    'Authorization': `Bearer ${localStorage.getItem('teacherToken')}`,
+                    'Content-Type': 'multipart/form-data'
                 },
-                body: formData
+            
             });
 
-            if (res.ok) {
+            if (res.status === 201) {
                 onSuccess();
                 setTitle('');
                 setFile(null);

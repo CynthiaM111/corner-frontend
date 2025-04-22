@@ -39,7 +39,7 @@ const TeacherDashboard = () => {
                     Authorization: `Bearer ${token}`,
                 },
             });
-console.log("Fetched courses: ", response.data.courses);
+
 setCourses(response.data.courses);
             // const sortedCourses = response.data.courses
             //     .filter(course => !isNaN(new Date(course.createdAt).getTime()))
@@ -60,7 +60,7 @@ setCourses(response.data.courses);
             });
             const userInfo = response.data;
             setUser(userInfo);
-            console.log('User info fetched:', userInfo);
+            
         } catch (error) {
             console.error('Error fetching user info:', error);
         }
