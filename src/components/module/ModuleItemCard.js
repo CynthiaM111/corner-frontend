@@ -57,7 +57,7 @@ export default function ModuleItemCard({ item, teacherId, onDelete, onUpdate }) 
                         )}
                         {item.type === 'document' && (
                             <a
-                                href={`${url}/uploads/${item.file.path}`}
+                                href={item.file.path}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-blue-600 hover:underline mt-1 inline-block"

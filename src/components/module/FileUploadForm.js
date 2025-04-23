@@ -36,6 +36,7 @@ export default function FileUploadForm({ moduleId, type, onSuccess }) {
             }
         } catch (err) {
             console.error('Failed to upload file', err);
+            alert('Failed to upload file');
         } finally {
             setIsLoading(false);
         }
