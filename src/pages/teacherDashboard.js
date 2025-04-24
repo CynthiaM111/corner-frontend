@@ -53,7 +53,7 @@ setCourses(response.data.courses);
 
     const fetchUserInfo = async () => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_BASE_URL || 'http://localhost:5001'}/corner/user/get-user-info`, {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5001'}/corner/user/get-user-info`, {
                 headers: {
                     Authorization: `Bearer ${token}`, // Replace with your token retrieval logic
                 },

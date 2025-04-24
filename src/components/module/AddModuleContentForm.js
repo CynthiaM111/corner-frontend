@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import TextContentForm from './TextContentForm';
 import FileUploadForm from './FileUploadForm';
-
+import LinkForm from './LinkForm';
 export default function AddContentForm({ moduleId, onSuccess }) {
     const [contentType, setContentType] = useState('text');
 

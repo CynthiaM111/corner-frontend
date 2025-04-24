@@ -60,11 +60,21 @@ export default function ModuleItemCard({ item, teacherId, onDelete, onUpdate }) 
                                 href={item.file.path}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-blue-600 hover:underline mt-1 inline-block"
+                                className="text-rose-600 hover:underline mt-1 inline-block"
                             >
                                 Download File {item.file.originalname}
                             </a>
                         )}
+                        {item.type === 'link' && (
+                            <a
+                                href={item.content.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-rose-600 hover:underline"
+                            >
+                            {item.title || item.content.url}
+                        </a>
+                    )}
                     </div>
 
                     {teacherId && (

@@ -1,9 +1,10 @@
 // LinkForm.js
 import { useState } from 'react';
+import axios from 'axios';
 
 export default function LinkForm({ moduleId, onSuccess }) {
     const [title, setTitle] = useState('');
-    const [url, setUrl] = useState('');
+    const [content, setContent] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
     const handleSubmit = async (e) => {
@@ -11,24 +12,22 @@ export default function LinkForm({ moduleId, onSuccess }) {
         setIsLoading(true);
 
         try {
-            const res = await fetch('/api/module-items', {
-                method: 'POST',
+            const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5001'}/corner/module-items/`, {
+                moduleId,
+                title,
+                type: 'link',
+                content: {url: content}
+            }, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem('teacherToken')}`
                 },
-                body: JSON.stringify({
-                    moduleId,
-                    title,
-                    type: 'link',
-                    url
-                })
             });
 
-            if (res.ok) {
+            if (res.status === 201) {
                 onSuccess();
                 setTitle('');
-                setUrl('');
+                setContent('');
             }
         } catch (err) {
             console.error('Failed to add link', err);
@@ -47,11 +46,14 @@ export default function LinkForm({ moduleId, onSuccess }) {
                 className="w-full p-2 border rounded"
                 required
             />
+            <a href={content} target="_blank" rel="noopener noreferrer">
+                {content}
+            </a>
             <input
                 type="url"
                 placeholder="https://example.com"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
                 className="w-full p-2 border rounded"
                 required
             />
