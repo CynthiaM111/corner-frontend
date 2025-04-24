@@ -54,7 +54,7 @@ export default function ModuleList({ courseId, teacherId }) {
                 />
             )}
 
-            <div className="space-y-3">
+            <div className="space-y-4">
                 {modules.map(module => (
                     <ModuleCard
                         key={module._id}

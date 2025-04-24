@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import EditItemForm from './EditItemForm';
-import { FaEdit, FaTrash } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaFileAlt, FaLink, FaFile } from 'react-icons/fa';
 
 export default function ModuleItemCard({ item, teacherId, onDelete, onUpdate }) {
     const [isEditing, setIsEditing] = useState(false);
@@ -21,6 +21,7 @@ export default function ModuleItemCard({ item, teacherId, onDelete, onUpdate }) 
         }
     };
 
+
     const togglePublish = async () => {
         try {
             await axios.put(`${url}/corner/module-items/${item._id}`, {
@@ -38,7 +39,7 @@ export default function ModuleItemCard({ item, teacherId, onDelete, onUpdate }) 
     };
 
     return (
-        <div className="p-4 hover:bg-gray-50">
+        <div className="px-6 py-3 hover:bg-red-50 border-b border-gray-200">
             {isEditing ? (
                 <EditItemForm
                     item={item}
@@ -51,8 +52,14 @@ export default function ModuleItemCard({ item, teacherId, onDelete, onUpdate }) 
             ) : (
                 <div className="flex justify-between items-start">
                     <div>
-                        <h4 className="font-medium">{item.title}</h4>
+                        <div className="flex items-center gap-2 ml-2">
+                            {item.type === 'text' && <FaFileAlt className="text-gray-600" />}
+                            {item.type === 'document' && <FaFile className="text-gray-600" />}
+                            {item.type === 'link' && <FaLink className="text-gray-600" />}
+                            <h4 className="font-medium">{item.title}</h4>
+                        </div>
                         {item.type === 'text' && (
+                           // editablecontent Icon
                             <p className="text-gray-600 mt-1">{item.content?.text || 'No text content'}</p>
                         )}
                         {item.type === 'document' && (

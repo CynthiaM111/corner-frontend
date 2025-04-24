@@ -83,68 +83,68 @@ const Announcements = ({ courseId }) => {
     };
 
     return (
-        <div className="announcements-section mt-5">
-            <h3 className="display-6 mb-3">Announcements</h3>
-
-            
-
-            {/* Error and success messages */}
-            {error && <p className="text-danger">{error}</p>}
-            {success && <p className="text-success">{success}</p>}
+        <div className="space-y-4">
+            <div className="flex justify-between items-center">
+                <h2 className="text-xl font-bold">Course Announcements</h2>
+            </div>
 
             {/* Add new announcement form */}
             {getsUserRole() === 'teacher' && (
-            <form onSubmit={handleAddAnnouncement} className="mb-4">
-                <div className="mb-3">
-                    <label htmlFor="announcementTitle" className="form-label">
-                        Title
-                    </label>
-                    <input
-                        type="text"
-                        id="announcementTitle"
-                        className="form-control"
-                        value={newAnnouncement.title}
-                        onChange={(e) =>
-                            setNewAnnouncement({ ...newAnnouncement, title: e.target.value })
-                        }
-                        placeholder="Enter announcement title"
-                    />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="announcementContent" className="form-label">
-                        Content
-                    </label>
-                    <textarea
-                        id="announcementContent"
-                        className="form-control"
-                        value={newAnnouncement.content}
-                        onChange={(e) =>
-                            setNewAnnouncement({ ...newAnnouncement, content: e.target.value })
-                        }
-                        placeholder="Enter announcement content"
-                        rows="3"
-                    />
-                </div>
-                <button type="submit" className="btn btn-primary">
-                    Add Announcement
-                </button>
-            </form>
+                <form onSubmit={handleAddAnnouncement} className="bg-white rounded-lg shadow p-6 mb-6">
+                    <div className="mb-4">
+                        <label htmlFor="announcementTitle" className="block text-sm font-medium text-gray-700">
+                            Title
+                        </label>
+                        <input
+                            type="text"
+                            id="announcementTitle"
+                            className="mt-1 block w-full rounded-md border-gray-400 shadow-sm focus:border-rose-500 focus:ring-rose-500 p-2"
+                            value={newAnnouncement.title}
+                            onChange={(e) => setNewAnnouncement({ ...newAnnouncement, title: e.target.value })}
+                            placeholder="Enter announcement title"
+                        />
+                    </div>
+                    <div className="mb-4">
+                        <label htmlFor="announcementContent" className="block text-sm font-medium text-gray-700">
+                            Content
+                        </label>
+                        <textarea
+                            id="announcementContent"
+                            className="mt-1 block w-full rounded-md border-gray-600 shadow-sm focus:border-rose-500 focus:ring-rose-500 p-2"
+                            value={newAnnouncement.content}
+                            onChange={(e) => setNewAnnouncement({ ...newAnnouncement, content: e.target.value })}
+                            placeholder="Enter announcement content"
+                            rows="3"
+                        />
+                    </div>
+                    <button 
+                        type="submit" 
+                        className="bg-rose-600 text-white px-4 py-2 rounded-md hover:bg-rose-700"
+                    >
+                        Add Announcement
+                    </button>
+                </form>
             )}
 
+            {error && <p className="text-red-600">{error}</p>}
+            {success && <p className="text-green-600">{success}</p>}
+
             {/* List of announcements */}
-            {announcements && announcements.length > 0 ? (
-                <ul className="list-unstyled">
-                    {announcements.map((announcement) => (
-                        <li key={announcement._id} className="mb-3">
-                            <h5>{announcement.title}</h5>
-                            <p className="text-muted small">{new Date(announcement.createdAt).toLocaleString()}</p>
-                            <p>{announcement.content}</p>
-                        </li>
-                    ))}
-                </ul>
-            ) : (
-                <p>No announcements yet. Stay tuned!</p>
-            )}
+            <div className="space-y-4">
+                {announcements && announcements.length > 0 ? (
+                    announcements.map((announcement) => (
+                        <div key={announcement._id} className="bg-white rounded-lg shadow p-6">
+                            <h3 className="text-lg font-medium text-gray-900">{announcement.title}</h3>
+                            <p className="text-sm text-gray-500 mt-1">
+                                {new Date(announcement.createdAt).toLocaleString()}
+                            </p>
+                            <p className="mt-2 text-gray-700">{announcement.content}</p>
+                        </div>
+                    ))
+                ) : (
+                    <p className="text-gray-500 text-center py-4">No announcements yet. Stay tuned!</p>
+                )}
+            </div>
         </div>
     );
 };

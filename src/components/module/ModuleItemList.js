@@ -30,7 +30,7 @@ export default function ModuleItemList({ moduleId, teacherId }) {
     if (isLoading) return <div className="p-4 text-center">Loading...</div>;
 
     return (
-        <div className="divide-y">
+        <div className="divide-y divide-gray-300 bg-white">
             {items.length === 0 ? (
                 <div className="p-4 text-center text-gray-500">
                     No content added yet

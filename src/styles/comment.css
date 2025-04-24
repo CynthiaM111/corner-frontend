@@ -39,3 +39,38 @@ form.d-flex {
     width: 100%;
    tarea */
 /* }  */
+
+.quill-editor .ql-container {
+    border: none;
+    font-size: 14px;
+}
+
+.quill-editor .ql-toolbar {
+    border: none;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.quill-editor .ql-editor {
+    padding: 12px 15px;
+    min-height: 100px;
+}
+
+.quill-editor .ql-editor.ql-blank::before {
+    font-style: normal;
+    color: #9ca3af;
+}
+
+.ql-snow .ql-toolbar button:hover,
+.ql-snow .ql-toolbar button.ql-active {
+    color: #e11d48;
+}
+
+.ql-snow .ql-toolbar button:hover .ql-stroke,
+.ql-snow .ql-toolbar button.ql-active .ql-stroke {
+    stroke: #e11d48;
+}
+
+.ql-snow .ql-toolbar button:hover .ql-fill,
+.ql-snow .ql-toolbar button.ql-active .ql-fill {
+    fill: #e11d48;
+}

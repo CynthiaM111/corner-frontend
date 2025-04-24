@@ -3,9 +3,11 @@ import { useState, useEffect } from 'react';
 import CourseHeader from './CourseHeader';
 import CourseSidebar from './CourseSidebar';
 import ModuleList from '../module/ModuleList';
+import Announcements from '../announcement';
 import axios from 'axios';
 import TeacherLayout from '../../layouts/TeacherLayout';
 import { FaBookOpen, FaBullhorn, FaComments, FaChartBar, FaFileAlt, FaRobot, FaCog, FaHome } from 'react-icons/fa';
+import Discussions from '../discussion';
 
 const CourseDetails = () => {
     const { courseId } = useParams();
@@ -81,7 +83,7 @@ const CourseDetails = () => {
     }
 
     return (
-        <div className="wflex min-h-screen bg-gray-50">
+        <div className="wflex min-h-screen ">
             <TeacherLayout>
                 <div className="flex-1 ml-2">
                     <CourseHeader course={course} />
@@ -91,11 +93,21 @@ const CourseDetails = () => {
                             activeTab={activeTab}
                             setActiveTab={setActiveTab}
                         />
-                        <div className="flex-1 p-6 bg-gray-100">
+                        <div className="flex-1 p-6 ">
                             {activeTab === 'Modules' && (
                                 <ModuleList
                                     courseId={course._id}
                                     teacherId={user.role === 'teacher' ? user.userId : null}
+                                />
+                            )}
+                            {activeTab === 'Announcements' && (
+                                <Announcements 
+                                    courseId={course._id}
+                                />
+                            )}
+                            {activeTab === 'Discussions' && (
+                                <Discussions 
+                                    courseId={course._id}
                                 />
                             )}
                         </div>
