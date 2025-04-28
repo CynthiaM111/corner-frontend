@@ -6,16 +6,20 @@ import ModuleList from '../module/ModuleList';
 import Announcements from '../announcement';
 import axios from 'axios';
 import TeacherLayout from '../../layouts/TeacherLayout';
-import { FaBookOpen, FaBullhorn, FaComments, FaChartBar, FaFileAlt, FaRobot, FaCog, FaHome } from 'react-icons/fa';
+import { FaBookOpen, FaBullhorn, FaComments, FaChartBar, FaFileAlt, FaRobot, FaCog, FaHome, FaAngleRight } from 'react-icons/fa';
 import Discussions from '../discussion';
 
 const CourseDetails = () => {
     const { courseId } = useParams();
     const location = useLocation();
     const [course, setCourse] = useState(location.state?.course || null);
-    const [loading, setLoading] = useState(!location.state?.course);
+    const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('Modules');
     const [user, setUser] = useState(null);
+    const [recentAnnouncements, setRecentAnnouncements] = useState([]);
+    const [recentQuestions, setRecentQuestions] = useState([]);
+    const [announcements, setAnnouncements] = useState([]);
+    const [questions, setQuestions] = useState([]);
     const courseTabs = [
         { name: 'Home', icon: FaHome },
         { name: 'Modules', icon: FaBookOpen },
@@ -52,27 +56,72 @@ const CourseDetails = () => {
     }, []);
 
     useEffect(() => {
-        if (!course) {
-            const fetchCourse = async () => {
-                try {
-                    const response = await axios.get(
-                        `${url}/corner/course/get-course/${courseId}`,
-                        {
-                            headers: {
-                                Authorization: `Bearer ${localStorage.getItem('teacherToken')}`,
-                            },
-                        }
-                    );
-                    setCourse(response.data.course);
-                } catch (error) {
-                    console.error('Error fetching course:', error);
-                } finally {
-                    setLoading(false);
+        
+        const fetchCourseData = async () => {
+            try {
+                setLoading(true);
+                // Fetch course and questions
+                const courseResponse = await axios.get(
+                    `${url}/corner/course/get-course/${courseId}`,
+                    {
+                        headers: { Authorization: `Bearer ${localStorage.getItem('teacherToken')}` }
+                    }
+                );
+                
+                if (courseResponse.data) {
+                    setCourse(courseResponse.data.course);
+                    setQuestions(courseResponse.data.questions || []);
                 }
-            };
-            fetchCourse();
+
+                // Fetch announcements
+                const announcementsResponse = await axios.get(
+                    `${url}/corner/course/${courseId}/get-announcements`,
+                    {
+                        headers: { Authorization: `Bearer ${localStorage.getItem('teacherToken')}` }
+                    }
+                );
+
+                if (announcementsResponse.data) {
+                    setAnnouncements(announcementsResponse.data.announcements || []);
+                }
+
+            } catch (error) {
+                console.error('Error fetching course data:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (courseId) {
+            fetchCourseData();
         }
-    }, [courseId, course]);
+    }, [courseId, localStorage.getItem('teacherToken'), url]);
+
+    useEffect(() => {
+        if (activeTab === 'Home') {
+            fetchRecentContent();
+        }
+    }, [activeTab, courseId]);
+
+    const fetchRecentContent = async () => {
+        try {
+            // Fetch recent announcements
+            const announcementsResponse = await axios.get(
+                `${url}/corner/course/${courseId}/get-announcements`,
+                { headers: { Authorization: `Bearer ${localStorage.getItem('teacherToken')}` } }
+            );
+            setRecentAnnouncements(announcementsResponse.data.announcements.slice(0, 3));
+
+            // Fetch recent questions
+            const questionsResponse = await axios.get(
+                `${url}/corner/course/${courseId}/questions`,
+                { headers: { Authorization: `Bearer ${localStorage.getItem('teacherToken')}` } }
+            );
+            setRecentQuestions(questionsResponse.data.questions.slice(0, 3));
+        } catch (error) {
+            console.error('Error fetching recent content:', error);
+        }
+    };
 
     if (loading || !user) {
         return <div>Loading...</div>;
@@ -83,7 +132,7 @@ const CourseDetails = () => {
     }
 
     return (
-        <div className="wflex min-h-screen ">
+        <div className="wflex min-h-screen">
             <TeacherLayout>
                 <div className="flex-1 ml-2">
                     <CourseHeader course={course} />
@@ -93,22 +142,112 @@ const CourseDetails = () => {
                             activeTab={activeTab}
                             setActiveTab={setActiveTab}
                         />
-                        <div className="flex-1 p-6 ">
-                            {activeTab === 'Modules' && (
-                                <ModuleList
-                                    courseId={course._id}
-                                    teacherId={user.role === 'teacher' ? user.userId : null}
-                                />
-                            )}
-                            {activeTab === 'Announcements' && (
-                                <Announcements 
-                                    courseId={course._id}
-                                />
-                            )}
-                            {activeTab === 'Discussions' && (
-                                <Discussions 
-                                    courseId={course._id}
-                                />
+                        <div className="flex-1 p-6">
+                            {loading ? (
+                                <div className="text-center py-4">
+                                    <p className="text-gray-500">Loading...</p>
+                                </div>
+                            ) : (
+                                <>
+                                    {activeTab === 'Home' && (
+                                        <div className="space-y-8">
+                                            {/* Recent Announcements Section */}
+                                            <div>
+                                                <div className="flex justify-between items-center mb-4">
+                                                    <h2 className="text-xl font-bold">Recent Announcements</h2>
+                                                    {announcements.length > 3 && (
+                                                        <button 
+                                                            onClick={() => setActiveTab('Announcements')}
+                                                            className="text-rose-600 hover:text-rose-700 flex items-center text-sm"
+                                                        >
+                                                            View All <FaAngleRight className="ml-1" />
+                                                        </button>
+                                                    )}
+                                                </div>
+                                                <div className="space-y-4">
+                                                    {announcements && announcements.length > 0 ? (
+                                                        [...announcements]
+                                                            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                                                            .slice(0, 3)
+                                                            .map((announcement) => (
+                                                                <div key={announcement._id} className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                                                                    <h3 className="font-medium text-gray-900">{announcement.title}</h3>
+                                                                    <p className="text-sm text-rose-600 mt-1">
+                                                                        Posted on {new Date(announcement.createdAt).toLocaleString()}
+                                                                    </p>
+                                                                    <p className="mt-2 text-gray-700">{announcement.content}</p>
+                                                                </div>
+                                                            ))
+                                                    ) : (
+                                                        <p className="text-gray-500 italic">No announcements yet</p>
+                                                    )}
+                                                </div>
+                                            </div>
+
+                                            {/* Recent Questions Section */}
+                                            <div>
+                                                <div className="flex justify-between items-center mb-4">
+                                                    <h2 className="text-xl font-bold">Recent Questions</h2>
+                                                    {questions.length > 3 && (
+                                                        <button 
+                                                            onClick={() => setActiveTab('Discussions')}
+                                                            className="text-rose-600 hover:text-rose-700 flex items-center text-sm"
+                                                        >
+                                                            View All <FaAngleRight className="ml-1" />
+                                                        </button>
+                                                    )}
+                                                </div>
+                                                <div className="space-y-4">
+                                                    {questions && questions.length > 0 ? (
+                                                        [...questions]
+                                                            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                                                            .slice(0, 3)
+                                                            .map((question) => (
+                                                                <div key={question._id} className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                                                                    <h3 className="font-medium text-gray-900">{question.title}</h3>
+                                                                    <p className="text-sm text-rose-600 mt-1">
+                                                                        Posted by {question.isAnonymous ? 'Anonymous' : question.createdBy?.name} on{' '}
+                                                                        {new Date(question.createdAt).toLocaleString()}
+                                                                    </p>
+                                                                    <p className="mt-2 text-gray-700">
+                                                                        {question.content.length > 150 
+                                                                            ? question.content.substring(0, 150) + '...' 
+                                                                            : question.content
+                                                                        }
+                                                                    </p>
+                                                                    <p className="text-sm text-rose-600 mt-2">
+                                                                        {question.comments?.length || 0} comments
+                                                                    </p>
+                                                                </div>
+                                                            ))
+                                                    ) : (
+                                                        <p className="text-gray-500 italic">No questions yet</p>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                    {activeTab === 'Modules' && (
+                                        <ModuleList
+                                            courseId={course._id}
+                                            teacherId={user.role === 'teacher' ? user.userId : null}
+                                        />
+                                    )}
+                                    {activeTab === 'Announcements' && (
+                                        <Announcements 
+                                            courseId={course._id}
+                                            announcements={announcements}
+                                            setAnnouncements={setAnnouncements}
+                                        />
+                                    )}
+                                    {activeTab === 'Discussions' && (
+                                        <Discussions 
+                                            courseId={course._id}
+                                            questions={questions}
+                                            setQuestions={setQuestions}
+                                        />
+                                    )}
+                                </>
                             )}
                         </div>
                     </div>
