@@ -28,9 +28,10 @@ export default function FileUploadForm({ moduleId, type, onSuccess }) {
                 },
             
             });
+            console.log("File Upload Response", res.data);
 
             if (res.status === 201) {
-                onSuccess();
+                onSuccess(res.data);
                 setTitle('');
                 setFile(null);
             }

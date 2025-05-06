@@ -4,7 +4,7 @@ import { FaTrash, FaEdit, FaEllipsisV, FaChevronDown, FaChevronUp } from 'react-
 import ModuleCard from './ModuleCard';
 import AddModuleForm from './AddModuleForm';
 import axios from 'axios';
-import ModuleItemCard from './ModuleItemCard';
+import ModuleItemList from './ModuleItemList';
 
 export default function ModuleList({ courseId, teacherId }) {
     const [modules, setModules] = useState([]);
@@ -188,16 +188,11 @@ export default function ModuleList({ courseId, teacherId }) {
 
                         {expandedModule === module._id && (
                             <div className="border-t border-gray-200 p-4 bg-gray-50">
-                                <ModuleItemCard 
+                                <ModuleItemList 
                                     moduleId={module._id}
-                                    items={module.items || []}
-                                    onItemsUpdate={(updatedItems) => {
-                                        setModules(modules.map(m => 
-                                            m._id === module._id 
-                                                ? { ...m, items: updatedItems }
-                                                : m
-                                        ));
-                                    }}
+                                    teacherId={teacherId}
+                                        
+                                   
                                 />
                             </div>
                         )}
