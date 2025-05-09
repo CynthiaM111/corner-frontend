@@ -8,6 +8,7 @@ import axios from 'axios';
 import TeacherLayout from '../../layouts/TeacherLayout';
 import { FaBookOpen, FaBullhorn, FaComments, FaChartBar, FaFileAlt, FaRobot, FaCog, FaHome, FaAngleRight } from 'react-icons/fa';
 import Discussions from '../discussion';
+import { fetchUserInfo } from '../../utils/userInfo';
 
 const CourseDetails = () => {
     const { courseId } = useParams();
@@ -35,19 +36,23 @@ const CourseDetails = () => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const token = localStorage.getItem('teacherToken');
+                const teacherToken = localStorage.getItem('teacherToken');
+                const studentToken = localStorage.getItem('studentToken');
+                const token = teacherToken || studentToken;
+                
                 if (!token) {
-                   
+                    console.log('No token found');
                     return;
                 }
-                const response = await axios.get(
-                    `${url}/corner/user/get-user-info`,
-                    {
-                        headers: { Authorization: `Bearer ${token}` }
-                    }
-                );
                 
-                setUser(response.data);
+                // Get userId from JWT token
+                const tokenData = JSON.parse(atob(token.split('.')[1]));
+                const userId = tokenData.userId;
+                
+                const userData = await fetchUserInfo(userId);
+                if (userData) {
+                    setUser(userData);
+                }
             } catch (error) {
                 console.error('Error fetching user:', error);
             }
@@ -56,15 +61,16 @@ const CourseDetails = () => {
     }, []);
 
     useEffect(() => {
-        
         const fetchCourseData = async () => {
             try {
                 setLoading(true);
+                const token = localStorage.getItem('teacherToken') || localStorage.getItem('studentToken');
+                
                 // Fetch course and questions
                 const courseResponse = await axios.get(
                     `${url}/corner/course/get-course/${courseId}`,
                     {
-                        headers: { Authorization: `Bearer ${localStorage.getItem('teacherToken')}` }
+                        headers: { Authorization: `Bearer ${token}` }
                     }
                 );
                 
@@ -77,7 +83,7 @@ const CourseDetails = () => {
                 const announcementsResponse = await axios.get(
                     `${url}/corner/course/${courseId}/get-announcements`,
                     {
-                        headers: { Authorization: `Bearer ${localStorage.getItem('teacherToken')}` }
+                        headers: { Authorization: `Bearer ${token}` }
                     }
                 );
 
@@ -95,7 +101,7 @@ const CourseDetails = () => {
         if (courseId) {
             fetchCourseData();
         }
-    }, [courseId, localStorage.getItem('teacherToken'), url]);
+    }, [courseId, url]);
 
     useEffect(() => {
         if (activeTab === 'Home') {
@@ -103,19 +109,22 @@ const CourseDetails = () => {
         }
     }, [activeTab, courseId]);
 
+    
     const fetchRecentContent = async () => {
         try {
+            const token = localStorage.getItem('teacherToken') || localStorage.getItem('studentToken');
+            
             // Fetch recent announcements
             const announcementsResponse = await axios.get(
                 `${url}/corner/course/${courseId}/get-announcements`,
-                { headers: { Authorization: `Bearer ${localStorage.getItem('teacherToken')}` } }
+                { headers: { Authorization: `Bearer ${token}` } }
             );
             setRecentAnnouncements(announcementsResponse.data.announcements.slice(0, 3));
 
             // Fetch recent questions
             const questionsResponse = await axios.get(
                 `${url}/corner/course/${courseId}/questions`,
-                { headers: { Authorization: `Bearer ${localStorage.getItem('teacherToken')}` } }
+                { headers: { Authorization: `Bearer ${token}` } }
             );
             setRecentQuestions(questionsResponse.data.questions.slice(0, 3));
         } catch (error) {

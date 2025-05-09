@@ -22,12 +22,15 @@ const Login = () => {
             // Save token to localStorage based on the role
             if (role === 'teacher') {
                 localStorage.setItem('teacherToken', token);
+                localStorage.removeItem('studentToken');
             } else if (role === 'student') {
                 localStorage.setItem('studentToken', token);
+                localStorage.removeItem('teacherToken');
             }
 
             setRole(role); 
             if (role === 'teacher') {
+                
                 setMessage('Login successful! You are a teacher.');
             } else {
                 setMessage('Login successful! You are a student.');

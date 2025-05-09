@@ -8,7 +8,7 @@ export default function ModuleItemList({ moduleId, teacherId }) {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const url = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5001';
-    const token = localStorage.getItem('teacherToken');
+    const token = localStorage.getItem('teacherToken') || localStorage.getItem('studentToken');
 
     const fetchItems = async () => {
         if (!moduleId) return; // Don't fetch if no moduleId

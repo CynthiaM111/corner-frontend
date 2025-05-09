@@ -15,7 +15,9 @@ export default function ModuleList({ courseId, teacherId }) {
     const [showDropdown, setShowDropdown] = useState(null);
     const [expandedModule, setExpandedModule] = useState(null);
     const url = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5001';
-    const token = localStorage.getItem('teacherToken');
+    const token = localStorage.getItem('teacherToken') || localStorage.getItem('studentToken');
+    const isTeacher = !!localStorage.getItem('teacherToken');
+    
 
     const fetchModules = async () => {
         try {
@@ -110,7 +112,7 @@ export default function ModuleList({ courseId, teacherId }) {
         <div className="space-y-4">
             <div className="flex justify-between items-center">
                 <h2 className="text-xl font-bold">Course Modules</h2>
-                {teacherId && (
+                {isTeacher && (
                     <button
                         onClick={() => setShowAddForm(!showAddForm)}
                         className="px-4 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-colors"
@@ -146,43 +148,45 @@ export default function ModuleList({ courseId, teacherId }) {
                                     }
                                     <h3 className="text-lg font-medium">{module.title}</h3>
                                 </div>
-                                <div className="relative">
-                                    <button 
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            setShowDropdown(showDropdown === module._id ? null : module._id);
-                                        }}
-                                        className="text-gray-500 hover:text-gray-700"
-                                    >
-                                        <FaEllipsisV />
-                                    </button>
-                                    {showDropdown === module._id && (
-                                        <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200">
-                                            <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    setEditingModule(module);
-                                                    setNewTitle(module.title);
-                                                    setShowEditModal(true);
-                                                    setShowDropdown(null);
-                                                }}
-                                                className="w-full text-left px-4 py-2 hover:bg-gray-50 flex items-center text-gray-700"
-                                            >
-                                                <FaEdit className="mr-2" /> Edit
-                                            </button>
-                                            <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handleDeleteModule(module._id);
-                                                    setShowDropdown(null);
-                                                }}
-                                                className="w-full text-left px-4 py-2 hover:bg-gray-50 flex items-center text-red-600"
-                                            >
-                                                <FaTrash className="mr-2" /> Delete
-                                            </button>
-                                        </div>
-                                    )}
-                                </div>
+                                {isTeacher && (
+                                    <div className="relative">
+                                        <button 
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setShowDropdown(showDropdown === module._id ? null : module._id);
+                                            }}
+                                            className="text-gray-500 hover:text-gray-700"
+                                        >
+                                            <FaEllipsisV />
+                                        </button>
+                                        {showDropdown === module._id && (
+                                            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200">
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setEditingModule(module);
+                                                        setNewTitle(module.title);
+                                                        setShowEditModal(true);
+                                                        setShowDropdown(null);
+                                                    }}
+                                                    className="w-full text-left px-4 py-2 hover:bg-gray-50 flex items-center text-gray-700"
+                                                >
+                                                    <FaEdit className="mr-2" /> Edit
+                                                </button>
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleDeleteModule(module._id);
+                                                        setShowDropdown(null);
+                                                    }}
+                                                    className="w-full text-left px-4 py-2 hover:bg-gray-50 flex items-center text-red-600"
+                                                >
+                                                    <FaTrash className="mr-2" /> Delete
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         </div>
 
@@ -191,8 +195,7 @@ export default function ModuleList({ courseId, teacherId }) {
                                 <ModuleItemList 
                                     moduleId={module._id}
                                     teacherId={teacherId}
-                                        
-                                   
+                                    isTeacher={isTeacher}
                                 />
                             </div>
                         )}

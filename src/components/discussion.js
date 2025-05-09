@@ -15,7 +15,7 @@ const Discussions = ({ courseId }) => {
     const [userRole, setUserRole] = useState(null);
     const [expandedContent, setExpandedContent] = useState({});
     const url = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5001';
-    const token = localStorage.getItem('teacherToken');
+    const token = localStorage.getItem('teacherToken')||localStorage.getItem('studentToken');
 
     useEffect(() => {
         fetchQuestions();
@@ -108,12 +108,14 @@ const Discussions = ({ courseId }) => {
         <div className="space-y-4">
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-bold">Course Discussions</h2>
-                <button
-                    onClick={() => setShowModal(true)}
-                    className="bg-rose-600 text-white px-4 py-2 rounded-md hover:bg-rose-700 transition-colors"
-                >
-                    Add Question
-                </button>
+                {userRole === 'teacher' && (
+                    <button
+                        onClick={() => setShowModal(true)}
+                        className="bg-rose-600 text-white px-4 py-2 rounded-md hover:bg-rose-700 transition-colors"
+                    >
+                        Add Question
+                    </button>
+                )}
             </div>
 
             <QuestionModal

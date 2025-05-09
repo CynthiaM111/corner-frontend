@@ -11,6 +11,8 @@ import useAutoLogout from './hooks/autoLogout';
 import LogoutButton from './components/logoutButton';
 // import RegisterSchool from './components/registerSchool';
 import VerifyEmail from './components/verifyEmail';
+import TeacherLayout from './layouts/TeacherLayout';
+import CourseDisplay from './components/shared/CourseDisplay';
 function App() {
     useAutoLogout();
     const [role, setRole] = useState('');
@@ -48,10 +50,25 @@ function App() {
                 <Route exact path="/logout" element={<LogoutButton />} />
                 <Route exact path="/add-course" element={<TeacherDashboard />} />
                 <Route exact path="/select-course" element={<StudentCourseSelection />} />
+                <Route exact path="/teacher-courses" element={
+                    role === 'teacher' ? (
+                        <TeacherLayout>
+                            <CourseDisplay viewType="teacher" />
+                        </TeacherLayout>
+                    ) : <Login />
+                } />
+
+                <Route exact path="/student-dashboard" element={
+                    role === 'student' ? (
+                        <TeacherLayout>
+                            <CourseDisplay viewType="enrolled" />
+                        </TeacherLayout>
+                    ) : <Login />
+                } />
                 {/* <Route exact path="/register-school" element={<RegisterSchool />} /> */}
-                <Route path="/student-dashboard"
+                {/* <Route path="/student-dashboard"
                     element={role === 'student' ? <StudentDashboard /> : <Login />}
-                />
+                /> */}
                 <Route path="/teacher-dashboard"
                     element={role === 'teacher' ? <TeacherDashboard /> : <Login />}
                 />

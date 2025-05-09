@@ -37,26 +37,21 @@ export default function AddModuleForm({ courseId, onSuccess, teacherId }) {
 
     return (
         <form onSubmit={handleSubmit} className="bg-gray-50 p-4 rounded-lg mb-4">
-            <div className="space-y-3">
+            <div className="space-y-3 gap-2">
                 <input
                     type="text"
                     placeholder="Module Title"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="w-full p-2 border rounded"
+                    className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-rose-700"
                     required
                 />
-                <textarea
-                    placeholder="Description (Optional)"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    className="w-full p-2 border rounded min-h-[80px]"
-                />
-                <div className="flex justify-end space-x-2">
+                
+                <div className="flex justify-end space-x-2 mt-4">
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="px-4 py-2 bg-blue-600 text-white rounded disabled:bg-blue-400"
+                        className="px-4 py-2 bg-rose-600 text-white rounded disabled:bg-rose-400"
                     >
                         {isLoading ? 'Creating...' : 'Create Module'}
                     </button>

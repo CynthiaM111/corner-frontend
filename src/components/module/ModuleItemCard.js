@@ -12,7 +12,8 @@ const ModuleItemCard = ({ moduleId, items = [], onItemsUpdate }) => {
         content: { text: '' }
     });
     const [isLoading, setIsLoading] = useState(false);
-    const token = localStorage.getItem('teacherToken');
+    const token = localStorage.getItem('teacherToken') || localStorage.getItem('studentToken');
+    const isTeacher = !!localStorage.getItem('teacherToken');
     const url = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5001';
 
     const handleDelete = async (itemId) => {
@@ -142,14 +143,14 @@ const ModuleItemCard = ({ moduleId, items = [], onItemsUpdate }) => {
             {items && Array.isArray(items) && items.length > 0 ? (
                 <div className="space-y-2">
                     {items.map((item) => {
-                        console.log("Rendering Item", item);
+                       
                         if (!item) return null; 
                         return (
                         <div key={item._id || Math.random()} className="bg-white p-4 rounded-md shadow-sm border border-gray-200">
                             <div className="flex justify-between items-start">
                                 {renderItemContent(item)}
                                 <div className="flex space-x-2">
-                                    {item._id && (
+                                    {item._id && isTeacher && (
                                         <>
                                             <button
                                                 onClick={() => togglePublish(item._id, item.isPublished)}
@@ -178,118 +179,123 @@ const ModuleItemCard = ({ moduleId, items = [], onItemsUpdate }) => {
             ) : (
                 <p className="text-gray-500 italic">No items in this module</p>
             )}
-            {/* Header with Add Item Button */}
-            <div className="flex justify-end mb-2">
-                {!showAddForm && (
-                    <button
-                        onClick={() => setShowAddForm(true)}
-                        className="flex items-center text-rose-600 hover:text-rose-700 transition-colors border-2 border-rose-600 rounded-sm px-3 py-1"
-                    >
-                        <FaPlus className="mr-2" /> Add Module Item
-                    </button>
-                )}
-            </div>
-
-            {/* Add Item Form */}
-            {showAddForm && (
-                <div className="bg-white p-4 rounded-md shadow-sm border border-gray-200">
-                    <h4 className="font-medium text-gray-900 mb-4">Add New Item</h4>
-                    
-                    <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Type
-                        </label>
-                        <select
-                            value={newItem.type}
-                            onChange={(e) => setNewItem({ 
-                                ...newItem, 
-                                type: e.target.value,
-                                content: e.target.value === 'text' ? { text: '' } : {}
-                            })}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-rose-500"
-                        >
-                            <option value="text">Text</option>
-                            <option value="document">Document/File</option>
-                            <option value="link">Link</option>
-                        </select>
+            {/* Only show Add Item button and form for teachers */}
+            {isTeacher && (
+                <>
+                    {/* Header with Add Item Button */}
+                    <div className="flex justify-end mb-2">
+                        {!showAddForm && (
+                            <button
+                                onClick={() => setShowAddForm(true)}
+                                className="flex items-center text-rose-600 hover:text-rose-700 transition-colors border-2 border-rose-600 rounded-sm px-3 py-1"
+                            >
+                                <FaPlus className="mr-2" /> Add Module Item
+                            </button>
+                        )}
                     </div>
 
-                    {newItem.type === 'document' ? (
-                        <FileUploadForm 
-                            moduleId={moduleId}
-                            type="document"
-                            onSuccess={handleFileUploadSuccess}
-                        />
-                    ) : (
-                        <form onSubmit={handleAddItem} className="space-y-4">
-                            <div>
+                    {/* Add Item Form */}
+                    {showAddForm && (
+                        <div className="bg-white p-4 rounded-md shadow-sm border border-gray-200">
+                            <h4 className="font-medium text-gray-900 mb-4">Add New Item</h4>
+                            
+                            <div className="mb-4">
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Title
+                                    Type
                                 </label>
-                                <input
-                                    type="text"
-                                    value={newItem.title}
-                                    onChange={(e) => setNewItem({ ...newItem, title: e.target.value })}
+                                <select
+                                    value={newItem.type}
+                                    onChange={(e) => setNewItem({ 
+                                        ...newItem, 
+                                        type: e.target.value,
+                                        content: e.target.value === 'text' ? { text: '' } : {}
+                                    })}
                                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-rose-500"
-                                    required
+                                >
+                                    <option value="text">Text</option>
+                                    <option value="document">Document/File</option>
+                                    <option value="link">Link</option>
+                                </select>
+                            </div>
+
+                            {newItem.type === 'document' ? (
+                                <FileUploadForm 
+                                    moduleId={moduleId}
+                                    type="document"
+                                    onSuccess={handleFileUploadSuccess}
                                 />
-                            </div>
+                            ) : (
+                                <form onSubmit={handleAddItem} className="space-y-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                                            Title
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={newItem.title}
+                                            onChange={(e) => setNewItem({ ...newItem, title: e.target.value })}
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-rose-500"
+                                            required
+                                        />
+                                    </div>
 
-                            {newItem.type === 'text' && (
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Content
-                                    </label>
-                                    <textarea
-                                        value={newItem.content.text}
-                                        onChange={(e) => setNewItem({
-                                            ...newItem,
-                                            content: { text: e.target.value }
-                                        })}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-rose-500"
-                                        rows="3"
-                                        required
-                                    />
-                                </div>
+                                    {newItem.type === 'text' && (
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                                Content
+                                            </label>
+                                            <textarea
+                                                value={newItem.content.text}
+                                                onChange={(e) => setNewItem({
+                                                    ...newItem,
+                                                    content: { text: e.target.value }
+                                                })}
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-rose-500"
+                                                rows="3"
+                                                required
+                                            />
+                                        </div>
+                                    )}
+
+                                    {newItem.type === 'link' && (
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                                URL
+                                            </label>
+                                            <input
+                                                type="url"
+                                                value={newItem.content.url || ''}
+                                                onChange={(e) => setNewItem({
+                                                    ...newItem,
+                                                    content: { url: e.target.value }
+                                                })}
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-rose-500"
+                                                required
+                                            />
+                                        </div>
+                                    )}
+
+                                    <div className="flex justify-end gap-2">
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowAddForm(false)}
+                                            className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200"
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            disabled={isLoading}
+                                            className="px-4 py-2 bg-rose-600 text-white rounded-md hover:bg-rose-700 disabled:opacity-50"
+                                        >
+                                            {isLoading ? 'Adding...' : 'Add Item'}
+                                        </button>
+                                    </div>
+                                </form>
                             )}
-
-                            {newItem.type === 'link' && (
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        URL
-                                    </label>
-                                    <input
-                                        type="url"
-                                        value={newItem.content.url || ''}
-                                        onChange={(e) => setNewItem({
-                                            ...newItem,
-                                            content: { url: e.target.value }
-                                        })}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-rose-500"
-                                        required
-                                    />
-                                </div>
-                            )}
-
-                            <div className="flex justify-end gap-2">
-                                <button
-                                    type="button"
-                                    onClick={() => setShowAddForm(false)}
-                                    className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    disabled={isLoading}
-                                    className="px-4 py-2 bg-rose-600 text-white rounded-md hover:bg-rose-700 disabled:opacity-50"
-                                >
-                                    {isLoading ? 'Adding...' : 'Add Item'}
-                                </button>
-                            </div>
-                        </form>
+                        </div>
                     )}
-                </div>
+                </>
             )}
         </div>
     );

@@ -7,9 +7,10 @@ import AccountModal from '../utils/accountModal';
 import TeacherLayout from '../layouts/TeacherLayout';
 import '../styles/teacherdash.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import CourseDisplay from '../components/shared/CourseDisplay';
 const TeacherDashboard = () => {
     const navigate = useNavigate();
+    const [isTeacher, setIsTeacher] = useState(false);
     const [courses, setCourses] = useState([]);
     const [courseName, setCourseName] = useState('');
     const [courseDescription, setCourseDescription] = useState('');
@@ -40,115 +41,29 @@ const TeacherDashboard = () => {
         }
     }, [token]);
 
-    const fetchUserInfo = async () => {
-        try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5001'}/corner/user/get-user-info`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            setUser(response.data);
-        } catch (error) {
-            console.error('Error fetching user info:', error);
+    
+
+    const checkIsTeacher = useCallback(() => {
+        const teacherToken = localStorage.getItem('teacherToken');
+        if (!teacherToken) {
+            navigate('/');
+            return;
         }
-    };
+        setIsTeacher(true);
+    }, [navigate]);
 
     useEffect(() => {
+        checkIsTeacher();
         fetchCourses();
-        fetchUserInfo();
-    }, [fetchCourses]);
+        // fetchUserInfo();
+    }, [fetchCourses, checkIsTeacher]);
 
-    const handleAddCourse = async () => {
-        try {
-            const teacherId = getTeacherId();
-            await axios.post(
-                `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5001'}/corner/course/add-course`,
-                { name: courseName, teacherId, description: courseDescription },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-            setMessage('Course added successfully!');
-            fetchCourses();
-            setCourseName('');
-            setCourseDescription('');
-        } catch (error) {
-            setMessage('Failed to add course.');
-        }
-    };
-
-    const handleLogout = () => {
-        localStorage.removeItem('teacherToken');
-        navigate('/');
-    };
+    
 
     return (
         <TeacherLayout>
-            <div className="w-full p-4">
-                <div className="border-b border-gray-200 pb-3 mb-4 w-full">
-                    <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-                </div>
-
-                <div className="flex h-screen bg-white">
-                    <div className="flex-1 p-5 overflow-y-auto">
-                        <div className="p-5 bg-white rounded border border-gray-200 shadow-sm mb-6">
-                            <h4 className="mb-4 text-lg font-semibold text-gray-800">Add a New Course</h4>
-                            <div className="flex flex-col md:flex-row md:items-start gap-4 w-full">
-                                <input
-                                    type="text"
-                                    className="min-w-[250px] h-10 px-3 border border-gray-300 rounded-md flex-grow"
-                                    placeholder="Course Name"
-                                    value={courseName}
-                                    onChange={(e) => setCourseName(e.target.value)}
-                                />
-                                <textarea
-                                    className="min-w-[250px] h-10 px-3 border border-gray-300 rounded-md flex-grow resize-none"
-                                    placeholder="Course Description"
-                                    rows={3}
-                                    value={courseDescription}
-                                    onChange={(e) => setCourseDescription(e.target.value)}
-                                />
-                                <button
-                                    className="min-w-[150px] h-10 px-5 bg-rose-700 text-white font-bold rounded-md hover:bg-rose-800"
-                                    onClick={handleAddCourse}
-                                >
-                                    Add Course
-                                </button>
-                            </div>
-                        </div>
-
-                        {message && (
-                            <div className="mb-4 p-4 bg-green-100 border border-green-400 text-green-800 rounded relative">
-                                <strong>{message}</strong>
-                                <button
-                                    type="button"
-                                    className="absolute top-2 right-2 text-green-800"
-                                    aria-label="Close"
-                                    onClick={() => setMessage('')}
-                                >
-                                    ×
-                                </button>
-                            </div>
-                        )}
-
-                        <h4 className="mb-4 text-lg text-rose-700 font-semibold">Your Courses</h4>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {courses.map((course) => (
-                                <CourseCard key={course._id} course={course} />
-                            ))}
-                        </div>
-                    </div>
-                </div>
-
-                <AccountModal
-                    accountModalVisible={accountModalVisible}
-                    setAccountModalVisible={setAccountModalVisible}
-                    user={user}
-                    onLogout={handleLogout}
-                />
-            </div>
+            <CourseDisplay role="teacher" />
+            
         </TeacherLayout>
     );
 };

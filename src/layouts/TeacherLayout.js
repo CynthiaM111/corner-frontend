@@ -3,18 +3,45 @@ import React from 'react';
 import { FaBookOpen, FaUsers, FaCog, FaHome } from 'react-icons/fa';
 import Link from 'next/link';
 import { useNavigate } from 'react-router-dom';
-
+import { getCurrentRole } from '../utils/auth';
 
 // import { useRouter } from 'next/router';
 import { useLocation } from 'react-router-dom';
 const TeacherLayout = ({ children }) => {
     const location = useLocation();
     const navigate = useNavigate();
+    
+    // Check for tokens and determine role more explicitly
+    const role = getCurrentRole();
+    const isStudent = role === 'student';
+    const isTeacher = role === 'teacher';
+    
+
     const menuItems = [
-        { name: 'Dashboard', icon: FaHome, path: '/teacher-dashboard' },
-        { name: 'Courses', icon: FaBookOpen, path: '/teacher-courses' },
-        { name: 'Students', icon: FaUsers, path: '/teacher-students' },
-        { name: 'Settings', icon: FaCog, path: '/teacher-settings' },
+        { 
+            name: 'Dashboard', 
+            icon: FaHome, 
+            path: isStudent ? '/student-dashboard' : '/teacher-dashboard' 
+        },
+        { 
+            name: 'Courses', 
+            icon: FaBookOpen, 
+            path: isStudent ? '/select-course' : '/teacher-courses' 
+        },
+        {
+            name: 'Settings',
+            icon: FaCog,
+            path: '/teacher-settings'
+        },
+        // Only show these menu items for teachers
+        ...(isTeacher ? [
+            { 
+                name: 'Students', 
+                icon: FaUsers, 
+                path: '/teacher-students' 
+            },
+            
+        ] : [])
     ];
     const handleLogout = () => {
         localStorage.removeItem('teacherToken');

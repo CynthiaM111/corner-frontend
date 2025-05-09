@@ -6,6 +6,7 @@ import axios from 'axios';
 export default function ModuleCard({ module, teacherId, onUpdate }) {
     const [isExpanded, setIsExpanded] = useState(false);
     const [showAddContent, setShowAddContent] = useState(false);
+    const token = localStorage.getItem('teacherToken') || localStorage.getItem('studentToken');
     const url = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5001';
 
     const togglePublish = async () => {
@@ -15,7 +16,7 @@ export default function ModuleCard({ module, teacherId, onUpdate }) {
             }, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('teacherToken')}`
+                    'Authorization': `Bearer ${token}`
                 },
             });
             onUpdate();
