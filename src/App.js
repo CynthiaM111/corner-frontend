@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Signup from './components/signup';
 import Login from './components/login';
-import TeacherDashboard from './pages/teacherDashboard';
+import TeacherDashboard from './teacher/teacherDashboard';
 import StudentCourseSelection from './student/studentCourseSelection';
 import StudentDashboard from './components/studentDashboard';
 import CourseDetails from './components/course/CourseDetails';
@@ -14,6 +14,7 @@ import VerifyEmail from './components/verifyEmail';
 import TeacherLayout from './layouts/TeacherLayout';
 import CourseDisplay from './components/shared/CourseDisplay';
 import WorkInProgress from './components/WorkInProgress';
+
 
 function App() {
     useAutoLogout();
@@ -76,7 +77,7 @@ function App() {
                     element={role === 'teacher' ? <TeacherDashboard /> : <Login />}
                 />
                 <Route path="/courses/:courseId" element={<CourseDetails />} /> {/* Course Details */}
-
+                
 
             </Routes>
         </Router>

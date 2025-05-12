@@ -33,6 +33,9 @@ const CourseDetails = () => {
     ];
     const url = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5001';
 
+   
+
+
     useEffect(() => {
         const fetchUser = async () => {
             try {
