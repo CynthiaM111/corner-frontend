@@ -1,3 +1,17 @@
+## 🔐 Test Login Credentials
+
+You can log in using the following accounts:
+
+### 👨‍🎓 Student Account
+- **Email:** `negisi@gmail.com`  
+- **Password:** `123456`
+
+### 👩‍🏫 Teacher Account
+- **Email:** `nema@gmail.com`  
+- **Password:** `123456`
+
+> These credentials are for demonstration/testing purposes only.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
