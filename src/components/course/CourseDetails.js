@@ -9,7 +9,7 @@ import TeacherLayout from '../../layouts/TeacherLayout';
 import { FaBookOpen, FaBullhorn, FaComments, FaChartBar, FaFileAlt, FaRobot, FaCog, FaHome, FaAngleRight } from 'react-icons/fa';
 import Discussions from '../discussion';
 import { fetchUserInfo } from '../../utils/userInfo';
-
+import AIChatInterface from '../ai/AIChatInterface';
 const CourseDetails = () => {
     const { courseId } = useParams();
     const location = useLocation();
@@ -254,6 +254,12 @@ const CourseDetails = () => {
                                             courseId={course._id}
                                             questions={questions}
                                             setQuestions={setQuestions}
+                                        />
+                                    )}
+                                    {activeTab === 'AI Assistant' && (
+                                        <AIChatInterface 
+                                            courseName={course.name}
+                                            courseId={course._id}
                                         />
                                     )}
                                 </>

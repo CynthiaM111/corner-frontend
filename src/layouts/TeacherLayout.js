@@ -4,6 +4,7 @@ import { FaBookOpen, FaUsers, FaCog, FaHome } from 'react-icons/fa';
 import Link from 'next/link';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentRole } from '../utils/auth';
+import WorkInProgress from '../components/WorkInProgress';
 
 // import { useRouter } from 'next/router';
 import { useLocation } from 'react-router-dom';
@@ -31,14 +32,14 @@ const TeacherLayout = ({ children }) => {
         {
             name: 'Settings',
             icon: FaCog,
-            path: '/teacher-settings'
+            path: '/work-in-progress'
         },
         // Only show these menu items for teachers
         ...(isTeacher ? [
             { 
                 name: 'Students', 
                 icon: FaUsers, 
-                path: '/teacher-students' 
+                path: '/work-in-progress' 
             },
             
         ] : [])
@@ -88,8 +89,9 @@ const TeacherLayout = ({ children }) => {
                             </Link>
                         );
                     })}
+                    <button onClick={handleLogout} className="w-[80%] mx-auto mb-4 py-2 px-4 bg-red-500 text-white rounded hover:bg-red-600 transition-colors duration-200">Logout</button>
                 </nav>
-                <button onClick={handleLogout} className="mt-4 w-full text-left flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-rose-100">Logout</button>
+                
             </div>
 
             {/* Main Content */}

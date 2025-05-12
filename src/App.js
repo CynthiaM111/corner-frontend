@@ -13,6 +13,8 @@ import LogoutButton from './components/logoutButton';
 import VerifyEmail from './components/verifyEmail';
 import TeacherLayout from './layouts/TeacherLayout';
 import CourseDisplay from './components/shared/CourseDisplay';
+import WorkInProgress from './components/WorkInProgress';
+
 function App() {
     useAutoLogout();
     const [role, setRole] = useState('');
@@ -48,6 +50,7 @@ function App() {
                 <Route exact path="/login" element={<Login />} />
                 <Route exact path="/verify-email/:token" element={<VerifyEmail />} />
                 <Route exact path="/logout" element={<LogoutButton />} />
+                <Route exact path="/work-in-progress" element={<WorkInProgress />} />
                 <Route exact path="/add-course" element={<TeacherDashboard />} />
                 <Route exact path="/select-course" element={<StudentCourseSelection />} />
                 <Route exact path="/teacher-courses" element={
