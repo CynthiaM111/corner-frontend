@@ -14,7 +14,7 @@ const Login = () => {
     
     const handleLogin = async () => {
         try {
-            const response = await axios.post(`${process.env.REACT_APP_BASE_URL || 'http://localhost:5001'}/corner/auth/login`, { email, password });
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5001'}/corner/auth/login`, { email, password });
 
             const { role, token } = response.data;
            

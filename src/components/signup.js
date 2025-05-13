@@ -14,7 +14,7 @@ const Signup = () => {
     const [isLoadingSchools, setIsLoadingSchools] = useState(true);
     
 
-    const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:5001';
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5001';
     
     useEffect(() => {
         const fetchSchools = async () => {
