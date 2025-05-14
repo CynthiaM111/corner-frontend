@@ -1,7 +1,7 @@
 import { io } from 'socket.io-client';
 
 // Use an environment variable or a fallback for the backend URL
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'https://your-backend-url.onrender.com';
+const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:5001';
 
 // Initialize the Socket.IO client
 const socket = io(BACKEND_URL, {

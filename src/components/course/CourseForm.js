@@ -9,7 +9,7 @@ const CourseForm = ({ onCourseAdded, getAuthToken, role }) => {
     const [message, setMessage] = useState('');
     const token = getAuthToken();
 
-    console.log('[CourseForm] Current token:', !!token); // Add thi
+    
     // Function to get teacher ID from JWT in localStorage
     const getTeacherId = () => {
         if (token) {
@@ -28,13 +28,13 @@ const CourseForm = ({ onCourseAdded, getAuthToken, role }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const teacherId = getTeacherId();
-            
+        
         if (!teacherId) {
             setMessage('Teacher ID not found. Please log in again.');
             return;
         }
         try {
-            const response = await axios.post(`${process.env.REACT_APP_BASE_URL || 'http://localhost:5001'}/corner/course/add-course`, {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5001'}/corner/course/add-course`, {
                 name: courseName,
                 description: courseDescription,
                 teacherId: teacherId,

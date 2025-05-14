@@ -30,7 +30,7 @@ const TeacherDashboard = () => {
 
     const fetchCourses = useCallback(async () => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_BASE_URL || 'http://localhost:5001'}/corner/course/get-teacher-courses`, {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5001'}/corner/course/get-teacher-courses`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

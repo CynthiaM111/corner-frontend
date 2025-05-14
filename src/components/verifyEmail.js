@@ -9,7 +9,7 @@ const VerifyEmail = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    const baseUrl = process.env.REACT_APP_BASE_URL||'http://localhost:5001';
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL||'http://localhost:5001';
 
     useEffect(() => {
         const verifyUserEmail = async () => {

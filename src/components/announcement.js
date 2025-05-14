@@ -22,7 +22,7 @@ const Announcements = ({ courseId }) => {
         const fetchAnnouncements = async () => {
             try {
                 const response = await axios.get(
-                    `${process.env.REACT_APP_BASE_URL || "http://localhost:5001"}/corner/course/${courseId}/get-announcements`,
+                    `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5001"}/corner/course/${courseId}/get-announcements`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`  // Add token in Authorization header
@@ -60,7 +60,7 @@ const Announcements = ({ courseId }) => {
 
         try {
             const response = await axios.post(
-                `${process.env.REACT_APP_BASE_URL || "http://localhost:5001"}/corner/course/${courseId}/add-announcement`,
+                `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5001"}/corner/course/${courseId}/add-announcement`,
                 newAnnouncement,
                 {
                     headers: {
