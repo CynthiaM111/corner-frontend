@@ -7,7 +7,7 @@ const AIChatInterface = ({ courseName, courseId }) => {
     const [isLoading, setIsLoading] = useState(true);
     const messagesEndRef = useRef(null);
     const axiosSource = useRef(axios.CancelToken.source());
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5001';
     const token = localStorage.getItem('teacherToken')||localStorage.getItem('studentToken');
 
     const getUserId = () => {
